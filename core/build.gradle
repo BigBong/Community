@@ -1,0 +1,45 @@
+apply plugin: 'java'
+apply plugin: 'groovy'
+
+version = '1.0'
+
+configurations {
+    mybatisGenerator
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.1.6'
+    testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
+
+    compile 'org.mybatis:mybatis:3.2.8'
+    compile 'org.mybatis:mybatis-spring:1.2.2'
+
+    compile 'org.springframework:spring-webmvc:3.2.2.RELEASE'
+    compile 'org.springframework:spring-dao:2.0.8'
+    compile 'commons-fileupload:commons-fileupload:1.3.1'
+    compile 'commons-io:commons-io:2.4'
+
+    compile 'log4j:log4j:1.2.17'
+    compile 'org.slf4j:slf4j-log4j12:1.7.9'
+
+    mybatisGenerator 'org.mybatis.generator:mybatis-generator-core:1.3.2'
+    mybatisGenerator 'mysql:mysql-connector-java:5.1.34'
+}
+
+task mybatisGenerate << {
+    ext.destDir = new File("src", 'main')
+    destDir.mkdirs()
+    println "path" + destDir.path
+    ant.properties['targetProject'] = destDir.path
+    ant.taskdef (
+            name: 'mbgenerator',
+            classname: 'org.mybatis.generator.ant.GeneratorAntTask',
+            classpath: configurations.mybatisGenerator.asPath
+    )
+    ant.mbgenerator (overwrite: true,
+            configfile: 'src/main/resources/mybatis/generatorConfig.xml',verbose: true){
+        propertyset {
+            propertyref(name: 'targetProject')
+        }
+    }
+}

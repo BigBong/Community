@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property resource="config/logback.properties" />
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <Target>System.out</Target>
+        <encoder>
+            <pattern>%d [%t] %p %logger - %m%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+    <appender name="LogFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${log.path}/${log.name}</File>
+        <Append>true</Append>
+        <encoder>
+            <pattern>%d [%t] %p %logger{0} - %m%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/${log.name}.%d{yyyy-MM-dd }</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+    <appender name="ErrorFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${log.path}/${log.name.error}</File>
+        <encoder>
+            <pattern>%d [%t] %p %logger{0} - %m%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/${log.name.error}.%d{yyyy-MM-dd }</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <!-- ****************************************************************************** -->
+    <appender name="configAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${log.config.path}/${log.config.name}</File>
+        <encoder>
+            <pattern>%d %p %logger{0} - %m%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.config.path}/${log.config.name}.%d{yyyy-MM-dd_HH}</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="eventAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${log.event.path}/${log.event.name}</File>
+        <encoder>
+            <pattern>%d %p %logger{0} - %m%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.event.path}/${log.event.name}.%d{yyyy-MM-dd_HH}</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="configCollectAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${log.config.path}/${log.collect.name}</File>
+        <encoder>
+            <pattern>%d %p %logger{0} - %m%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.config.path}/${log.collect.name}.%d{yyyy-MM-dd_HH}</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="accountAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${log.account.path}/${log.account.name}</File>
+        <encoder>
+            <pattern>%d %p %logger{0} - %m%n</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>INFO</level>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.account.path}/${log.account.name}.%d{yyyy-MM-dd}</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <logger name="eventLogger" level="INFO" additivity="false">
+        <appender-ref ref="eventAppender"/>
+    </logger>
+    <logger name="configLogger" level="INFO" additivity="false">
+        <appender-ref ref="configAppender"/>
+    </logger>
+    <logger name="collectLogger" level="INFO" additivity="false">
+        <appender-ref ref="configCollectAppender"/>
+    </logger>
+    <logger name="accountLogger" level="INFO" additivity="false">
+        <appender-ref ref="accountAppender"/>
+    </logger>
+
+    <logger name="org.springframework" level="INFO"/>
+    <logger name="org.apache" level="INFO"/>
+    <logger name="org.mybatis.spring" level="INFO"/>
+    <logger name="net.rubyeye.xmemcached" level="INFO"/>
+    <logger name="com.google.code.yanf4j" level="INFO"/>
+    <logger name="org.springframework.data.mongodb" level="INFO"/>
+
+    <root level="DEBUG">
+        <appender-ref ref="Console"/>
+        <appender-ref ref="LogFile"/>
+        <appender-ref ref="ErrorFile"/>
+    </root>
+</configuration>

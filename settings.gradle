@@ -1,0 +1,4 @@
+rootProject.name = 'Community'
+
+include 'core','api','manager'
+
