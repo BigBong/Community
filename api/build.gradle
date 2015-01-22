@@ -1,11 +1,11 @@
 apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'war'
-apply plugin : 'jetty'
+apply plugin: 'jetty'
 
 version = '1.0'
 
-def env = System.getProperty("env")?:"dev"
+def env = System.getProperty("env") ?: "dev"
 sourceSets {
     main {
         output.resourcesDir = "${buildDir}/classes/main"
@@ -37,6 +37,6 @@ dependencies {
 }
 
 jettyRun {
-    reload ="automatic"
+    reload = "automatic"
     scanIntervalSeconds = 1
 }
