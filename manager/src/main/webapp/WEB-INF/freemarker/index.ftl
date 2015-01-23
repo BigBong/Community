@@ -8,9 +8,8 @@
         body {
             height: 100%;
             margin: 0;
-            background: url(assets/img/books.jpg);
             background-size: 1440px 800px;
-            background-repeat: no-repeat;
+            background: url("<@s.url '/img/books.jpg'/>") no-repeat;
             display: compact;
         }
     </style>
