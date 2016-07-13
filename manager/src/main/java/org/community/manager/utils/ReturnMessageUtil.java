@@ -3,7 +3,9 @@ package org.community.manager.utils;
 import java.io.IOException;
 import java.util.List;
 
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.SerializationConfig;
 import org.community.core.common.ReturnMsg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -147,9 +149,10 @@ public class ReturnMessageUtil {
         }
     }
 
-    private static String toJson(Object object) {
+    public static String toJson(Object object) {
         try {
             ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
             return mapper.writeValueAsString(object);
         } catch (IOException e) {
             logger.warn("write to json string error:" + object, e);

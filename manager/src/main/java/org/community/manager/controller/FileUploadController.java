@@ -7,6 +7,7 @@ import java.util.Date;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.community.core.common.ReturnMsg;
 import org.community.core.model.pojo.LocalFile;
 import org.community.manager.service.FileUploadService;
 import org.community.manager.utils.DateUtil;
@@ -16,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 @RequestMapping("file")
 public class FileUploadController extends BaseController {
-    protected static final Logger logger = LoggerFactory.getLogger(FileUploadController.class);
+    private static final Logger logger = LoggerFactory.getLogger(FileUploadController.class);
 
     @Autowired
     private HttpServletRequest request;
@@ -38,7 +40,7 @@ public class FileUploadController extends BaseController {
     @Resource(name = "fileUploadService")
     private FileUploadService fileUploadService;
 
-    private LocalFile fileUpload;
+    private LocalFile localFile;
 
     @RequestMapping(value = "/home", method = RequestMethod.GET)
     public String home(Model model) {
@@ -49,10 +51,9 @@ public class FileUploadController extends BaseController {
      * 单文件上传
      *
      * @param file
-     *
      * @return
      */
-    @RequestMapping(value = "uploadSingleFile", produces = {"application/json;charset=UTF-8"})
+    @RequestMapping(value = "uploadSingleFile", method = RequestMethod.POST)
     @ResponseBody
     public String fileUpload(@RequestParam("file") MultipartFile file) {
         try {
@@ -68,10 +69,9 @@ public class FileUploadController extends BaseController {
      * 多文件上传
      *
      * @param files
-     *
      * @return
      */
-    @RequestMapping(value = "uploadMultiFile", produces = {"application/json;charset=UTF-8"})
+    @RequestMapping(value = "uploadMultiFile", method = RequestMethod.POST)
     @ResponseBody
     public String filesUpload(@RequestParam("files") MultipartFile[] files) {
         try {
@@ -87,35 +87,23 @@ public class FileUploadController extends BaseController {
         }
     }
 
-    @RequestMapping(value = "upload", produces = {"application/json;charset=UTF-8"})
+    @RequestMapping(value = "upload", method = RequestMethod.POST)
     @ResponseBody
-    public String upload(@RequestParam("file") MultipartFile file,
-                         @RequestParam("name") String name,
-                         @RequestParam("md5") String md5) {
-        logger.info("file:{},md5:{}", file, md5);
+    public ReturnMsg upload(@RequestParam("file") MultipartFile file, @RequestParam("name") String name) {
+        logger.info("file:{}", file);
         long startTime = System.currentTimeMillis();
-        String returnMsg;
         try {
             LocalFile fu = saveFile(name, file);
             long endTime = System.currentTimeMillis();
             logger.info("文件上传success! -costTime:{} ms,fileSize:{} byte", (endTime - startTime), file.getSize());
-            returnMsg = ReturnMessageUtil.createOKMsg("文件上传成功!");
-            returnMsg = ReturnMessageUtil.createOKMsg(fu);
+            return ReturnMsg.success(fu);
         } catch (IOException e) {
             logger.error("文件上传失败-file:{},e:{}", file.getOriginalFilename(), e);
-            returnMsg = ReturnMessageUtil.createErrorMsg("文件上传失败！");
+            return ReturnMsg.error("文件上传失败");
         } catch (DataAccessException e) {
             logger.error("save fileupload failed! - fileName:{}", file.getOriginalFilename(), e);
-            returnMsg = ReturnMessageUtil.createErrorMsg("保存文件信息失败！");
+            return ReturnMsg.error("保存文件信息失败！");
         }
-        return returnMsg;
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/matchMd5")
-    public String checkMD5(@RequestParam("md5") String md5) {
-        LocalFile fileUpload = fileUploadService.matchingMD5(md5);
-        return ReturnMessageUtil.createOKMsg(fileUpload != null);
     }
 
     private String getUploadFileRoot() {
@@ -126,7 +114,6 @@ public class FileUploadController extends BaseController {
      * 保存文件
      *
      * @param file
-     *
      * @return
      */
     private LocalFile saveFile(String name, final MultipartFile file) throws IOException {
@@ -135,12 +122,11 @@ public class FileUploadController extends BaseController {
         if (name != null && !"".equals(name)) {
             filePath = path + File.separator + name;
         }
-        File pathFile = new File(path);
-        final File newFile = new File(filePath);
+        final File pathFile = new File(path);
         if (!pathFile.exists()) {
             pathFile.mkdir();
         }
-
+        final File newFile = new File(filePath);
         if (newFile.exists()) {
             newFile.delete();
         }
@@ -158,24 +144,23 @@ public class FileUploadController extends BaseController {
                 @Override
                 public void onProgress(long bytesWritten, long totalSize) {
                     this.currentBytesWritten = bytesWritten;
-                    logger.info(
-                            "upload file onProgress  bytesWritten:" + bytesWritten + " , totalSize:" + file.getSize());
+                    logger.info("upload file onProgress  bytesWritten:" + bytesWritten + " , totalSize:" + file.getSize());
                 }
 
                 @Override
                 public void onFinish() {
                     LocalFile record = fileUploadService.getByName(newFile.getName());
                     if (record != null) {
-                        updateRecord(fileUpload, currentBytesWritten);
+                        updateRecord(localFile, currentBytesWritten);
                     } else {
-                        fileUpload = writeRecord(newFile, currentBytesWritten, file.getSize());
+                        localFile = writeRecord(newFile, currentBytesWritten, file.getSize());
                     }
                     logger.info("transfer file finished");
                 }
             };
             try {
                 FileUtils.copyInputStreamToFile(file.getInputStream(), newFile, progress);
-                return fileUpload;
+                return localFile;
             } catch (IOException e) { //为了发出finish，所以此处捕获
                 progress.onFinish();
                 throw new IOException(e);
