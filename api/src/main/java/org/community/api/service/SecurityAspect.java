@@ -20,8 +20,8 @@ public class SecurityAspect {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
-    @Around(value = "@annotation(org.community.api.service.EncryptResponse)",argNames = "proceedingJoinPoint")
-    public Object aroundAdvice(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
+    @Around(value = "@annotation(org.community.api.service.EncryptResponse)", argNames = "proceedingJoinPoint")
+    public Object aroundAdvice(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         Object resObj = proceedingJoinPoint.proceed(proceedingJoinPoint.getArgs());
         byte[] resByte = new byte[0];
         try {
@@ -33,8 +33,8 @@ public class SecurityAspect {
     }
 
 
-    @Around(value = "@annotation(org.community.api.service.EncryptCompressResponse)",argNames = "proceedingJoinPoint")
-    public Object compressAroundAdvice(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
+    @Around(value = "@annotation(org.community.api.service.EncryptCompressResponse)", argNames = "proceedingJoinPoint")
+    public Object compressAroundAdvice(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         Object resObj = proceedingJoinPoint.proceed(proceedingJoinPoint.getArgs());
         byte[] resByte = new byte[0];
         try {

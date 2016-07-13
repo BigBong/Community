@@ -3,36 +3,36 @@ package org.community.core.dao.impl;
 import java.util.List;
 
 import org.community.core.dao.FileUploadDao;
-import org.community.core.model.mapper.FileUploadMapper;
-import org.community.core.model.pojo.FileUpload;
-import org.community.core.model.pojo.FileUploadExample;
+import org.community.core.model.mapper.LocalFileMapper;
+import org.community.core.model.pojo.LocalFile;
+import org.community.core.model.pojo.LocalFileExample;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Created by frodo on 2015/4/8.
  */
-public class FileUploadDaoImpl extends BaseDaoImpl<FileUpload> implements FileUploadDao {
+public class FileUploadDaoImpl extends BaseDaoImpl<LocalFile> implements FileUploadDao {
 
     @Autowired
-    public FileUploadMapper fileUploadMapper;
+    public LocalFileMapper localFileMapper;
 
     @Override
-    public int create(FileUpload fileUpload) {
-        return fileUploadMapper.insertSelective(fileUpload);
+    public int create(LocalFile file) {
+        return localFileMapper.insertSelective(file);
     }
 
     @Override
-    public int update(FileUpload entity) {
-        return fileUploadMapper.updateByPrimaryKeySelective(entity);
+    public int update(LocalFile entity) {
+        return localFileMapper.updateByPrimaryKeySelective(entity);
     }
 
     @Override
-    public FileUpload getByMD5(String md5) {
-        FileUploadExample example = new FileUploadExample();
-        FileUploadExample.Criteria criteria = example.createCriteria();
+    public LocalFile getByMD5(String md5) {
+        LocalFileExample example = new LocalFileExample();
+        LocalFileExample.Criteria criteria = example.createCriteria();
         criteria.andMd5EqualTo(md5);
 
-        List<FileUpload> fileUploads = fileUploadMapper.selectByExample(example);
+        List<LocalFile> fileUploads = localFileMapper.selectByExample(example);
         if (fileUploads == null || fileUploads.isEmpty()) {
             return null;
         } else {
@@ -41,12 +41,12 @@ public class FileUploadDaoImpl extends BaseDaoImpl<FileUpload> implements FileUp
     }
 
     @Override
-    public FileUpload getByName(String name) {
-        FileUploadExample example = new FileUploadExample();
-        FileUploadExample.Criteria criteria = example.createCriteria();
+    public LocalFile getByName(String name) {
+        LocalFileExample example = new LocalFileExample();
+        LocalFileExample.Criteria criteria = example.createCriteria();
         criteria.andFileNameEqualTo(name);
 
-        List<FileUpload> fileUploads = fileUploadMapper.selectByExample(example);
+        List<LocalFile> fileUploads = localFileMapper.selectByExample(example);
         if (fileUploads == null || fileUploads.isEmpty()) {
             return null;
         } else {
@@ -55,7 +55,7 @@ public class FileUploadDaoImpl extends BaseDaoImpl<FileUpload> implements FileUp
     }
 
     @Override
-    public int insertAndGetId(FileUpload fileUpload) {
+    public int insertAndGetId(LocalFile fileUpload) {
         return 0;
     }
 

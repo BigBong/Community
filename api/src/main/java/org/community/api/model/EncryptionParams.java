@@ -10,8 +10,8 @@ public class EncryptionParams {
     private String data;  //数据
     private String sign; //签名
     private String c;   //是否压缩  1==压缩
-    private int urlDecode=1;   //是否url decode ,  1==decode 为需要urlDeEncoding
-    private boolean debug=false;
+    private int urlDecode = 1;   //是否url decode ,  1==decode 为需要urlDeEncoding
+    private boolean debug = false;
 
     public String getData() {
         return data;
@@ -53,14 +53,14 @@ public class EncryptionParams {
         this.debug = debug;
     }
 
-    public Map<String,Object> buildParams(){
-        Map<String,Object> rsMap =new HashMap<String, Object>();
-        rsMap.put("data",data);
-        rsMap.put("sign",sign);
-        rsMap.put("urlDecode",urlDecode);
-        rsMap.put("debug",debug);
-        if(c!=null){
-            rsMap.put("c",c);
+    public Map<String, Object> buildParams() {
+        Map<String, Object> rsMap = new HashMap<String, Object>();
+        rsMap.put("data", data);
+        rsMap.put("sign", sign);
+        rsMap.put("urlDecode", urlDecode);
+        rsMap.put("debug", debug);
+        if (c != null) {
+            rsMap.put("c", c);
         }
         return rsMap;
     }

@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.validation.ObjectError;
 
 public class ReturnMessageUtil {
-    public static final Logger logger = LoggerFactory.getLogger(ReturnMessageUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(ReturnMessageUtil.class);
 
     /**
      * 创建校验性错误消息（ajax用）,校验框架异常用
@@ -23,7 +23,7 @@ public class ReturnMessageUtil {
         ReturnMsg errorMsg = new ReturnMsg();
         errorMsg.setCode(Constants.ERROR_CODE);
         for (ObjectError oe : errors) {
-            errorMsg.setContent(oe.getDefaultMessage());
+            errorMsg.setData(oe.getDefaultMessage());
         }
         return toJson(errorMsg);
     }
@@ -38,7 +38,7 @@ public class ReturnMessageUtil {
     public static String createOKMsg(Object ro) {
         ReturnMsg okMsg = new ReturnMsg();
         okMsg.setCode(Constants.CORRECT_CODE);
-        okMsg.setContent(ro);
+        okMsg.setData(ro);
         return toJson(okMsg);
     }
 
@@ -52,7 +52,7 @@ public class ReturnMessageUtil {
     public static String createExceptionMsg(Exception e) {
         ReturnMsg okMsg = new ReturnMsg();
         okMsg.setCode(Constants.ERROR_CODE);
-        okMsg.setContent(e.getMessage());
+        okMsg.setData(e.getMessage());
         return toJson(okMsg);
     }
 
@@ -66,7 +66,7 @@ public class ReturnMessageUtil {
     public static String createErrorMsg(String msg) {
         ReturnMsg errorMsg = new ReturnMsg();
         errorMsg.setCode(Constants.ERROR_CODE);
-        errorMsg.setContent(msg);
+        errorMsg.setData(msg);
         return toJson(errorMsg);
     }
 
@@ -80,7 +80,7 @@ public class ReturnMessageUtil {
     public static String createNotFoundMsg(String msg) {
         ReturnMsg errorMsg = new ReturnMsg();
         errorMsg.setCode(Constants.NOT_FOUND_CODE);
-        errorMsg.setContent(msg);
+        errorMsg.setData(msg);
         return toJson(errorMsg);
     }
 
@@ -95,7 +95,7 @@ public class ReturnMessageUtil {
     public static String createOKMsg(Object ro, String callback) {
         ReturnMsg okMsg = new ReturnMsg();
         okMsg.setCode(Constants.CORRECT_CODE);
-        okMsg.setContent(ro);
+        okMsg.setData(ro);
         if (callback != null) {
             StringBuffer returnStr = new StringBuffer();
             returnStr.append(callback).append("(").append(toJson(okMsg)).append(");");
@@ -116,7 +116,7 @@ public class ReturnMessageUtil {
     public static String createErrorMsg(String msg, String callback) {
         ReturnMsg errorMsg = new ReturnMsg();
         errorMsg.setCode(Constants.ERROR_CODE);
-        errorMsg.setContent(msg);
+        errorMsg.setData(msg);
         if (callback != null) {
             StringBuffer returnStr = new StringBuffer();
             returnStr.append(callback).append("(").append(toJson(errorMsg)).append(");");
@@ -137,7 +137,7 @@ public class ReturnMessageUtil {
     public static String createNotFoundMsg(String msg, String callback) {
         ReturnMsg errorMsg = new ReturnMsg();
         errorMsg.setCode(Constants.NOT_FOUND_CODE);
-        errorMsg.setContent(msg);
+        errorMsg.setData(msg);
         if (callback != null) {
             StringBuffer returnStr = new StringBuffer();
             returnStr.append(callback).append("(").append(toJson(errorMsg)).append(");");

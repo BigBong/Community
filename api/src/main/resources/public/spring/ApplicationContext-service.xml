@@ -3,5 +3,5 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
        default-autowire="byName">
-    <bean id="personService" class="org.community.api.service.impl.PersonServiceImpl"/>
+    <bean id="userService" class="org.community.api.service.impl.UserServiceImpl"/>
 </beans>

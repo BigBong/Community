@@ -4,7 +4,7 @@ import java.util.Date;
 
 import javax.annotation.Resource;
 
-import org.community.core.model.pojo.FileUpload;
+import org.community.core.model.pojo.LocalFile;
 import org.community.manager.service.FileUploadService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -28,7 +28,7 @@ public class FileUploadServiceTest {
 
     @Test
     public void testInsert() throws Exception {
-        FileUpload fileUpload = new FileUpload();
+        LocalFile fileUpload = new LocalFile();
         fileUpload.setMd5("Md5Md5Md5Md5Md5");
         fileUpload.setFileName("FileNameForTest");
         fileUpload.setPath("c://test.file");

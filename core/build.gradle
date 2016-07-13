@@ -1,44 +1,80 @@
 apply plugin: 'java'
-apply plugin: 'groovy'
-
-version = '1.0'
+//apply plugin: 'groovy'
 
 configurations {
     mybatisGenerator
 }
 
 dependencies {
-    compile 'org.codehaus.groovy:groovy-all:2.1.6'
-    testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
+    testCompile libraries.junit
 
-    compile 'mysql:mysql-connector-java:5.1.34'
-    compile 'org.mybatis:mybatis:3.2.8'
-    compile 'org.mybatis:mybatis-spring:1.2.2'
+    // spring
+    compile(
+            libraries.spring_webmvc,
+            libraries.spring_dao,
+    )
 
-    compile 'org.springframework:spring-webmvc:3.2.2.RELEASE'
-    compile 'org.springframework:spring-dao:2.0.8'
-    compile 'commons-fileupload:commons-fileupload:1.3.1'
-    compile 'commons-io:commons-io:2.4'
+    // groovy
+    compile(
+            libraries.groovy_all,
+            libraries.spock_core,
+    )
 
-    compile 'log4j:log4j:1.2.17'
-    compile 'org.slf4j:slf4j-log4j12:1.7.9'
+    // test
+    compile(
+            libraries.spring_test,
+            libraries.mockito_all,
+            libraries.hamcrest_library,
+    )
 
-    mybatisGenerator 'org.mybatis.generator:mybatis-generator-core:1.3.2'
-    mybatisGenerator 'mysql:mysql-connector-java:5.1.34'
+    //  mysql
+    compile libraries.mysql
+
+    // mybatis
+    compile(
+            libraries.mybatis,
+            libraries.mybatis_spring,
+    )
+
+    // logback
+    compile(
+            libraries.slf4j_api,
+            libraries.logback_classic,
+            libraries.log4j_over_slf4j,
+    )
+
+    //  jackson
+    compile (
+            libraries.jackson,
+            libraries.jackson_databind,
+    )
+
+    // commons
+    compile(
+            libraries.commons_fileupload,
+            libraries.commons_codec,
+            libraries.commons_beanutils,
+            libraries.commons_net,
+            libraries.commons_collections,
+            libraries.commons_configuration,
+            libraries.commons_io,
+    )
+
+    mybatisGenerator libraries.mybatis_generator
+    mybatisGenerator libraries.mysql
 }
 
 task mybatisGenerate << {
-    ext.destDir = new File("src", 'main')
-    destDir.mkdirs()
-    println "path" + destDir.path
+    def destDir = new File("src", 'main')
+    println "destDir.path: ${destDir.path}"
     ant.properties['targetProject'] = destDir.path
-    ant.taskdef (
+    ant.taskdef(
             name: 'mbgenerator',
             classname: 'org.mybatis.generator.ant.GeneratorAntTask',
             classpath: configurations.mybatisGenerator.asPath
     )
-    ant.mbgenerator (overwrite: true,
-            configfile: 'src/main/resources/mybatis/generatorConfig.xml',verbose: true){
+    ant.mbgenerator(overwrite: true,
+            configfile: 'src/main/resources/mybatis/generatorConfig.xml', verbose: true) {
         propertyset {
             propertyref(name: 'targetProject')
         }

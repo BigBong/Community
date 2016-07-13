@@ -1,17 +1,17 @@
 package org.community.manager.service;
 
-import org.community.core.model.pojo.FileUpload;
+import org.community.core.model.pojo.LocalFile;
 import org.springframework.dao.DataAccessException;
 
 /**
  * Created by frodo on 2014/12/30.
  */
 public interface FileUploadService {
-    FileUpload getByName(String name);
+    LocalFile getByName(String name);
 
-    int save(FileUpload fileUpload) throws DataAccessException;
+    int save(LocalFile fileUpload) throws DataAccessException;
 
-    int update(FileUpload fileUpload) throws DataAccessException;
+    int update(LocalFile fileUpload) throws DataAccessException;
 
-    FileUpload matchingMD5(String md5);
+    LocalFile matchingMD5(String md5);
 }

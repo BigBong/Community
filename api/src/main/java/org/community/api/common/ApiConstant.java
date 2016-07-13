@@ -27,5 +27,5 @@ public interface ApiConstant {
     public static final String TASK_CODE_FEEDBACK = "A103";
     public static final String TASK_CODE_EVENT_ACCOUNT = "A104";
 
-    public static final int URL_DECODE= 1;
+    public static final int URL_DECODE = 1;
 }

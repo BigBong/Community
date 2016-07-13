@@ -1,7 +1,7 @@
 package org.community.manager.service.impl;
 
 import org.community.core.dao.FileUploadDao;
-import org.community.core.model.pojo.FileUpload;
+import org.community.core.model.pojo.LocalFile;
 import org.community.manager.service.FileUploadService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,23 +23,23 @@ public class FileUploadServiceImpl implements FileUploadService {
     private FileUploadDao fileUploadDao;
 
     @Override
-    public FileUpload getByName(String name) {
+    public LocalFile getByName(String name) {
         return fileUploadDao.getByName(name);
     }
 
     @Override
-    public int save(FileUpload fileUpload) throws DataAccessException {
+    public int save(LocalFile fileUpload) throws DataAccessException {
         return fileUploadDao.create(fileUpload);
     }
 
     @Override
-    public int update(FileUpload fileUpload) throws DataAccessException {
+    public int update(LocalFile fileUpload) throws DataAccessException {
         return fileUploadDao.update(fileUpload);
     }
 
     @Override
-    public FileUpload matchingMD5(String md5) {
-        FileUpload fileUpload;
+    public LocalFile matchingMD5(String md5) {
+        LocalFile fileUpload;
         try {
             fileUpload = fileUploadDao.getByMD5(md5);
         } catch (IncorrectResultSizeDataAccessException e) {

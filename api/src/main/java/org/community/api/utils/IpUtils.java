@@ -12,7 +12,7 @@ import java.util.Enumeration;
 public class IpUtils {
     public static String getLocalIp() throws SocketException {
         String localIp = null;
-        Enumeration<NetworkInterface> netInterfaces =NetworkInterface.getNetworkInterfaces();
+        Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();
         InetAddress ip = null;
         boolean finded = false;// 是否找到
         while (netInterfaces.hasMoreElements() && !finded) {
@@ -24,7 +24,7 @@ public class IpUtils {
                         && !ip.isLoopbackAddress()
                         && ip.getHostAddress().indexOf(":") == -1) {// 内网IP
                     localIp = ip.getHostAddress();
-                    finded=true;
+                    finded = true;
                     break;
                 }
             }
@@ -34,23 +34,23 @@ public class IpUtils {
 
     public static String getRemoteIp(HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");
-        if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-IP");
         }
-        if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("WL-Proxy-Client-IP");
         }
-        if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("X-Real-IP");
         }
-        if(ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
         }
-        if(ip!=null && ip.length()>0 && ip.indexOf(",")>-1 ){
-            String[] ipArray=ip.split(",");
-            for(String ipTmp:ipArray){
-                if(!"unknown".equalsIgnoreCase(ipTmp)){
-                    ip=ipTmp;
+        if (ip != null && ip.length() > 0 && ip.indexOf(",") > -1) {
+            String[] ipArray = ip.split(",");
+            for (String ipTmp : ipArray) {
+                if (!"unknown".equalsIgnoreCase(ipTmp)) {
+                    ip = ipTmp;
                     break;
                 }
             }

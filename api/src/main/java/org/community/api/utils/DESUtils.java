@@ -104,6 +104,7 @@ public class DESUtils extends Coder {
 
     /**
      * 加密后转换成string
+     *
      * @param data
      * @param key
      * @return
@@ -115,6 +116,7 @@ public class DESUtils extends Coder {
 
     /**
      * 解密后转换成string
+     *
      * @param data
      * @param key
      * @return

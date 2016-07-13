@@ -1,15 +1,18 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-}
+apply from: 'dependencyDefinitions.gradle'
 
-allprojects {
+subprojects {
     repositories {
         mavenCentral()
     }
 
     tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
+        sourceCompatibility = JavaVersion.VERSION_1_6
+        targetCompatibility = JavaVersion.VERSION_1_6
+        options.compilerArgs << "-Xlint:unchecked"
     }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.10'
 }

@@ -14,7 +14,7 @@
     <context:annotation-config/>
     <aop:aspectj-autoproxy/>
 
-    <bean id="securityAspect" class="org.community.api.service.SecurityAspect"/>
+    <!--<bean id="securityAspect" class="org.community.api.service.SecurityAspect"/>-->
 
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
