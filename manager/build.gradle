@@ -16,7 +16,7 @@ sourceSets {
 
 dependencies {
     compile project(':core')
-    providedCompile libraries.servlet_api
+    providedCompile libraries.servlet3
 
     runtime libraries.jstl
 

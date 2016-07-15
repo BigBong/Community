@@ -12,6 +12,9 @@ dependencies {
     compile(
             libraries.spring_webmvc,
             libraries.spring_dao,
+            libraries.spring_security_core,
+            libraries.spring_security_config,
+            libraries.spring_security_oauth2,
     )
 
     // groovy
