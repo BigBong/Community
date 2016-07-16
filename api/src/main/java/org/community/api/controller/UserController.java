@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Controller
-@RequestMapping("user")
+@RequestMapping("m/user")
 public class UserController {
     private static final Logger logger = Logger.getLogger(UserController.class);
 
@@ -21,7 +21,7 @@ public class UserController {
     @RequestMapping(value = "{username}")
     @ResponseBody
     public ReturnMsg<User> getUser(@PathVariable("username") String username) {
-        logger.info("getByIdFromParam >> id:" + username);
+        logger.info("getByIdFromParam >> username:" + username);
         User user = userService.getUserByName(username);
         if (user != null) {
             return ReturnMsg.success(user);

@@ -1,7 +1,9 @@
 -- admin, password is admin  ( All privileges)
-insert into user(uid,username,password,name,gender,birthday,avatar_url,email,phone,location,archived,created_at,update_at,last_login_at,description)
+insert into user(21,uid,username,password,name,gender,birthday,avatar_url,email,phone,location,archived,created_at,update_at,last_login_at,description)
 values
-('29f6004fb1b0466f9572b02bf2ac1be8','admin_nickname','21232f297a57a5a743894a0e4a801fc3','admin',1,now(),'https://avatars0.githubusercontent.com/u/7484982?v=3&u=4e45871de440c2bd2302a5420358118d6a4950f7&s=140','admin@mail.com','028-1234567','beijing',1,now(),now(),now(),'admin description.');
+(21,'29f6004fb1b0466f9572b02bf2ac1be8','admin_nickname','21232f297a57a5a743894a0e4a801fc3','admin',1,now(),'https://avatars0.githubusercontent.com/u/7484982?v=3&u=4e45871de440c2bd2302a5420358118d6a4950f7&s=140','admin@mail.com','028-1234567','beijing',1,now(),now(),now(),'admin description.');
+
+insert into user_privilege(user_id,privilege) values (21,'USER');
 
 -- unity, password is unity  ( ROLE_UNITY)
 insert into user(id,uid,username,password,name,gender,birthday,avatar_url,email,phone,location,archived,created_at,update_at,last_login_at,description)

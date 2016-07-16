@@ -945,52 +945,52 @@ public class UserExample {
             return (Criteria) this;
         }
 
-        public Criteria andArchivedEqualTo(Integer value) {
+        public Criteria andArchivedEqualTo(Boolean value) {
             addCriterion("archived =", value, "archived");
             return (Criteria) this;
         }
 
-        public Criteria andArchivedNotEqualTo(Integer value) {
+        public Criteria andArchivedNotEqualTo(Boolean value) {
             addCriterion("archived <>", value, "archived");
             return (Criteria) this;
         }
 
-        public Criteria andArchivedGreaterThan(Integer value) {
+        public Criteria andArchivedGreaterThan(Boolean value) {
             addCriterion("archived >", value, "archived");
             return (Criteria) this;
         }
 
-        public Criteria andArchivedGreaterThanOrEqualTo(Integer value) {
+        public Criteria andArchivedGreaterThanOrEqualTo(Boolean value) {
             addCriterion("archived >=", value, "archived");
             return (Criteria) this;
         }
 
-        public Criteria andArchivedLessThan(Integer value) {
+        public Criteria andArchivedLessThan(Boolean value) {
             addCriterion("archived <", value, "archived");
             return (Criteria) this;
         }
 
-        public Criteria andArchivedLessThanOrEqualTo(Integer value) {
+        public Criteria andArchivedLessThanOrEqualTo(Boolean value) {
             addCriterion("archived <=", value, "archived");
             return (Criteria) this;
         }
 
-        public Criteria andArchivedIn(List<Integer> values) {
+        public Criteria andArchivedIn(List<Boolean> values) {
             addCriterion("archived in", values, "archived");
             return (Criteria) this;
         }
 
-        public Criteria andArchivedNotIn(List<Integer> values) {
+        public Criteria andArchivedNotIn(List<Boolean> values) {
             addCriterion("archived not in", values, "archived");
             return (Criteria) this;
         }
 
-        public Criteria andArchivedBetween(Integer value1, Integer value2) {
+        public Criteria andArchivedBetween(Boolean value1, Boolean value2) {
             addCriterion("archived between", value1, value2, "archived");
             return (Criteria) this;
         }
 
-        public Criteria andArchivedNotBetween(Integer value1, Integer value2) {
+        public Criteria andArchivedNotBetween(Boolean value1, Boolean value2) {
             addCriterion("archived not between", value1, value2, "archived");
             return (Criteria) this;
         }
@@ -1115,63 +1115,63 @@ public class UserExample {
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginTimeIsNull() {
-            addCriterion("last_login_time is null");
+        public Criteria andLastLoginAtIsNull() {
+            addCriterion("last_login_at is null");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginTimeIsNotNull() {
-            addCriterion("last_login_time is not null");
+        public Criteria andLastLoginAtIsNotNull() {
+            addCriterion("last_login_at is not null");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginTimeEqualTo(Date value) {
-            addCriterion("last_login_time =", value, "lastLoginTime");
+        public Criteria andLastLoginAtEqualTo(Date value) {
+            addCriterion("last_login_at =", value, "lastLoginAt");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginTimeNotEqualTo(Date value) {
-            addCriterion("last_login_time <>", value, "lastLoginTime");
+        public Criteria andLastLoginAtNotEqualTo(Date value) {
+            addCriterion("last_login_at <>", value, "lastLoginAt");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginTimeGreaterThan(Date value) {
-            addCriterion("last_login_time >", value, "lastLoginTime");
+        public Criteria andLastLoginAtGreaterThan(Date value) {
+            addCriterion("last_login_at >", value, "lastLoginAt");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginTimeGreaterThanOrEqualTo(Date value) {
-            addCriterion("last_login_time >=", value, "lastLoginTime");
+        public Criteria andLastLoginAtGreaterThanOrEqualTo(Date value) {
+            addCriterion("last_login_at >=", value, "lastLoginAt");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginTimeLessThan(Date value) {
-            addCriterion("last_login_time <", value, "lastLoginTime");
+        public Criteria andLastLoginAtLessThan(Date value) {
+            addCriterion("last_login_at <", value, "lastLoginAt");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginTimeLessThanOrEqualTo(Date value) {
-            addCriterion("last_login_time <=", value, "lastLoginTime");
+        public Criteria andLastLoginAtLessThanOrEqualTo(Date value) {
+            addCriterion("last_login_at <=", value, "lastLoginAt");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginTimeIn(List<Date> values) {
-            addCriterion("last_login_time in", values, "lastLoginTime");
+        public Criteria andLastLoginAtIn(List<Date> values) {
+            addCriterion("last_login_at in", values, "lastLoginAt");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginTimeNotIn(List<Date> values) {
-            addCriterion("last_login_time not in", values, "lastLoginTime");
+        public Criteria andLastLoginAtNotIn(List<Date> values) {
+            addCriterion("last_login_at not in", values, "lastLoginAt");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginTimeBetween(Date value1, Date value2) {
-            addCriterion("last_login_time between", value1, value2, "lastLoginTime");
+        public Criteria andLastLoginAtBetween(Date value1, Date value2) {
+            addCriterion("last_login_at between", value1, value2, "lastLoginAt");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginTimeNotBetween(Date value1, Date value2) {
-            addCriterion("last_login_time not between", value1, value2, "lastLoginTime");
+        public Criteria andLastLoginAtNotBetween(Date value1, Date value2) {
+            addCriterion("last_login_at not between", value1, value2, "lastLoginAt");
             return (Criteria) this;
         }
 
@@ -1242,66 +1242,6 @@ public class UserExample {
 
         public Criteria andDescriptionNotBetween(String value1, String value2) {
             addCriterion("description not between", value1, value2, "description");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoleIdIsNull() {
-            addCriterion("role_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoleIdIsNotNull() {
-            addCriterion("role_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoleIdEqualTo(Integer value) {
-            addCriterion("role_id =", value, "roleId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoleIdNotEqualTo(Integer value) {
-            addCriterion("role_id <>", value, "roleId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoleIdGreaterThan(Integer value) {
-            addCriterion("role_id >", value, "roleId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoleIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("role_id >=", value, "roleId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoleIdLessThan(Integer value) {
-            addCriterion("role_id <", value, "roleId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoleIdLessThanOrEqualTo(Integer value) {
-            addCriterion("role_id <=", value, "roleId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoleIdIn(List<Integer> values) {
-            addCriterion("role_id in", values, "roleId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoleIdNotIn(List<Integer> values) {
-            addCriterion("role_id not in", values, "roleId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoleIdBetween(Integer value1, Integer value2) {
-            addCriterion("role_id between", value1, value2, "roleId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRoleIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("role_id not between", value1, value2, "roleId");
             return (Criteria) this;
         }
     }

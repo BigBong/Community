@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans:beans xmlns="http://www.springframework.org/schema/security"
-             xmlns:beans="http://www.springframework.org/schema/beans"
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xmlns:oauth2="http://www.springframework.org/schema/security/oauth2"
-             xmlns:mvc="http://www.springframework.org/schema/mvc"
-             xsi:schemaLocation="http://www.springframework.org/schema/beans
-                        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+<b:beans xmlns="http://www.springframework.org/schema/security"
+         xmlns:b="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:oauth2="http://www.springframework.org/schema/security/oauth2"
+         xmlns:mvc="http://www.springframework.org/schema/mvc"
+         xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
                         http://www.springframework.org/schema/security
                         http://www.springframework.org/schema/security/spring-security-4.1.xsd
                         http://www.springframework.org/schema/security/oauth2
                         http://www.springframework.org/schema/security/spring-security-oauth2-2.0.xsd
                         http://www.springframework.org/schema/mvc
-                        http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd">
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
 
     <!--<debug/>-->
 
@@ -38,15 +38,18 @@
         <csrf disabled="true"/>
     </http>
 
-    <beans:bean id="clientCredentialsTokenEndpointFilter"
-                class="org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter">
-        <beans:property name="authenticationManager" ref="oauth2AuthenticationManager"/>
-    </beans:bean>
-
+    <b:bean id="clientCredentialsTokenEndpointFilter"
+            class="org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter">
+        <b:property name="authenticationManager" ref="oauth2AuthenticationManager"/>
+    </b:bean>
 
     <!--unity http configuration-->
-    <http pattern="/unity/**" create-session="never" entry-point-ref="oauth2AuthenticationEntryPoint"
-          access-decision-manager-ref="oauth2AccessDecisionManager" use-expressions="false">
+    <http pattern="/unity/**"
+          request-matcher="mvc"
+          create-session="never"
+          entry-point-ref="oauth2AuthenticationEntryPoint"
+          access-decision-manager-ref="oauth2AccessDecisionManager"
+          use-expressions="false">
         <anonymous enabled="false"/>
 
         <intercept-url pattern="/unity/**" access="ROLE_UNITY,SCOPE_READ"/>
@@ -57,8 +60,12 @@
     </http>
 
     <!--mobile http configuration-->
-    <http pattern="/m/**" create-session="never" entry-point-ref="oauth2AuthenticationEntryPoint"
-          access-decision-manager-ref="oauth2AccessDecisionManager" use-expressions="false">
+    <http pattern="/m/**"
+          request-matcher="mvc"
+          create-session="never"
+          entry-point-ref="oauth2AuthenticationEntryPoint"
+          access-decision-manager-ref="oauth2AccessDecisionManager"
+          use-expressions="false">
         <anonymous enabled="false"/>
 
         <intercept-url pattern="/m/**" access="ROLE_MOBILE,SCOPE_READ"/>
@@ -74,22 +81,21 @@
     <!--mobile resource server filter-->
     <oauth2:resource-server id="mobileResourceServer" resource-id="mobile-resource" token-services-ref="tokenServices"/>
 
-    <beans:bean id="clientDetailsService" class="org.community.api.service.CustomJdbcClientDetailsService">
-        <beans:constructor-arg index="0" ref="dataSource"/>
-    </beans:bean>
-
+    <b:bean id="clientDetailsService" class="org.community.api.service.CustomJdbcClientDetailsService">
+        <b:constructor-arg index="0" ref="dataSource"/>
+    </b:bean>
 
     <!--Config token services-->
     <!--<beans:bean id="tokenStore" class="org.springframework.security.oauth2.provider.token.InMemoryTokenStore"/>-->
-    <beans:bean id="tokenStore" class="org.springframework.security.oauth2.provider.token.store.JdbcTokenStore">
-        <beans:constructor-arg index="0" ref="dataSource"/>
-    </beans:bean>
+    <b:bean id="tokenStore" class="org.springframework.security.oauth2.provider.token.store.JdbcTokenStore">
+        <b:constructor-arg index="0" ref="dataSource"/>
+    </b:bean>
 
-    <beans:bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
-        <beans:property name="tokenStore" ref="tokenStore"/>
-        <beans:property name="clientDetailsService" ref="clientDetailsService"/>
-        <beans:property name="supportRefreshToken" value="true"/>
-    </beans:bean>
+    <b:bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
+        <b:property name="tokenStore" ref="tokenStore"/>
+        <b:property name="clientDetailsService" ref="clientDetailsService"/>
+        <b:property name="supportRefreshToken" value="true"/>
+    </b:bean>
 
     <!--<global-method-security pre-post-annotations="enabled" proxy-target-class="true">-->
     <!--<expression-handler ref="oauth2ExpressionHandler"/>-->
@@ -98,24 +104,23 @@
     <!--<oauth2:expression-handler id="oauth2ExpressionHandler"/>-->
     <!--<oauth2:web-expression-handler id="oauth2WebExpressionHandler"/>-->
 
-    <beans:bean class="org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory"
-                id="oAuth2RequestFactory">
-        <beans:constructor-arg name="clientDetailsService" ref="clientDetailsService"/>
-    </beans:bean>
+    <b:bean class="org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory"
+            id="oAuth2RequestFactory">
+        <b:constructor-arg name="clientDetailsService" ref="clientDetailsService"/>
+    </b:bean>
+
+    <b:bean id="oauthUserApprovalHandler" class="org.community.api.common.OauthUserApprovalHandler">
+        <b:property name="tokenStore" ref="tokenStore"/>
+        <b:property name="clientDetailsService" ref="clientDetailsService"/>
+        <b:property name="requestFactory" ref="oAuth2RequestFactory"/>
+        <b:property name="oauthService" ref="oauthService"/>
+    </b:bean>
 
 
-    <beans:bean id="oauthUserApprovalHandler" class="com.monkeyk.sos.web.oauth.OauthUserApprovalHandler">
-        <beans:property name="tokenStore" ref="tokenStore"/>
-        <beans:property name="clientDetailsService" ref="clientDetailsService"/>
-        <beans:property name="requestFactory" ref="oAuth2RequestFactory"/>
-        <beans:property name="oauthService" ref="oauthService"/>
-    </beans:bean>
-
-
-    <beans:bean id="jdbcAuthorizationCodeServices"
-                class="org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices">
-        <beans:constructor-arg index="0" ref="dataSource"/>
-    </beans:bean>
+    <b:bean id="jdbcAuthorizationCodeServices"
+            class="org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices">
+        <b:constructor-arg index="0" ref="dataSource"/>
+    </b:bean>
 
 
     <oauth2:authorization-server client-details-service-ref="clientDetailsService" token-services-ref="tokenServices"
@@ -130,32 +135,32 @@
     </oauth2:authorization-server>
 
 
-    <beans:bean id="oauth2AuthenticationEntryPoint"
-                class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint"/>
+    <b:bean id="oauth2AuthenticationEntryPoint"
+            class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint"/>
 
 
-    <beans:bean id="oauth2ClientDetailsUserService"
-                class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
-        <beans:constructor-arg ref="clientDetailsService"/>
-    </beans:bean>
+    <b:bean id="oauth2ClientDetailsUserService"
+            class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
+        <b:constructor-arg ref="clientDetailsService"/>
+    </b:bean>
 
     <authentication-manager id="oauth2AuthenticationManager">
         <authentication-provider user-service-ref="oauth2ClientDetailsUserService"/>
     </authentication-manager>
 
-    <beans:bean id="oauth2AccessDecisionManager" class="org.springframework.security.access.vote.UnanimousBased">
-        <beans:constructor-arg>
-            <beans:list>
-                <beans:bean class="org.springframework.security.oauth2.provider.vote.ScopeVoter"/>
-                <beans:bean class="org.springframework.security.access.vote.RoleVoter"/>
-                <beans:bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
-            </beans:list>
-        </beans:constructor-arg>
-    </beans:bean>
+    <b:bean id="oauth2AccessDecisionManager" class="org.springframework.security.access.vote.UnanimousBased">
+        <b:constructor-arg>
+            <b:list>
+                <b:bean class="org.springframework.security.oauth2.provider.vote.ScopeVoter"/>
+                <b:bean class="org.springframework.security.access.vote.RoleVoter"/>
+                <b:bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
+            </b:list>
+        </b:constructor-arg>
+    </b:bean>
 
 
-    <beans:bean id="oauth2AccessDeniedHandler"
-                class="org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler"/>
+    <b:bean id="oauth2AccessDeniedHandler"
+            class="org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler"/>
 
 
     <http disable-url-rewriting="true" use-expressions="false"
@@ -171,17 +176,9 @@
         <csrf disabled="true"/>
     </http>
 
-
     <authentication-manager alias="authenticationManager">
         <authentication-provider user-service-ref="userService">
             <password-encoder hash="md5"/>
         </authentication-provider>
     </authentication-manager>
-
-
-    <!--
-    Oauth server end.............
-    -->
-
-
-</beans:beans>
+</b:beans>

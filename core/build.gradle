@@ -12,8 +12,14 @@ dependencies {
     compile(
             libraries.spring_webmvc,
             libraries.spring_dao,
+    )
+
+    // spring security
+    compile(
             libraries.spring_security_core,
             libraries.spring_security_config,
+            libraries.spring_security_web,
+            libraries.spring_security_taglibs,
             libraries.spring_security_oauth2,
     )
 

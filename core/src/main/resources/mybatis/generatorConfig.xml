@@ -44,7 +44,7 @@
         <table tableName="oauth_access_token" domainObjectName="OauthAccessToken"/>
         <table tableName="oauth_refresh_token" domainObjectName="OauthRefreshToken"/>
         <table tableName="oauth_code" domainObjectName="OauthCode"/>
-        <!--<table tableName="file" domainObjectName="LocalFile"/>-->
+        <table tableName="file" domainObjectName="LocalFile"/>
 
     </context>
 </generatorConfiguration>
