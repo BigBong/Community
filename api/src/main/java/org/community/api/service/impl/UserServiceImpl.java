@@ -50,6 +50,6 @@ public class UserServiceImpl implements UserService {
             throw new UsernameNotFoundException("Not found any user for username[" + username + "]");
         }
 
-        return new CustomUserDetails(user,getPrivilegesById(user.getId()));
+        return new CustomUserDetails(user, getPrivilegesById(user.getId()));
     }
 }

@@ -5,17 +5,17 @@ values
 
 insert into user_privilege(user_id,privilege) values (21,'USER');
 
--- unity, password is unity  ( ROLE_UNITY)
+-- web, password is web  ( ROLE_WEB)
 insert into user(id,uid,username,password,name,gender,birthday,avatar_url,email,phone,location,archived,created_at,update_at,last_login_at,description)
 values
-(22,'55b713df1c6f423e842ad68668523c49','unity_nickname','439b3a25b555b3bc8667a09a036ae70c','unity',1,now(),'https://avatars0.githubusercontent.com/u/7484982?v=3&u=4e45871de440c2bd2302a5420358118d6a4950f7&s=140','admin@mail.com','028-1234567','beijing',1,now(),now(),now(),'unity description.');
+(22,'55b713df1c6f423e842ad68668523c49','web_nickname','439b3a25b555b3bc8667a09a036ae70c','web',1,now(),'https://avatars0.githubusercontent.com/u/7484982?v=3&u=4e45871de440c2bd2302a5420358118d6a4950f7&s=140','web@mail.com','028-1234567','beijing',1,now(),now(),now(),'web description.');
 
-insert into user_privilege(user_id,privilege) values (22,'UNITY');
+insert into user_privilege(user_id,privilege) values (22,'WEB');
 
 -- mobile, password is mobile  ( ROLE_MOBILE)
 insert into user(id,uid,username,password,name,gender,birthday,avatar_url,email,phone,location,archived,created_at,update_at,last_login_at,description)
 values
-(23,'612025cb3f964a64a48bbdf77e53c2c1','mobile_nickname','532c28d5412dd75bf975fb951c740a30','mobile',1,now(),'https://avatars0.githubusercontent.com/u/7484982?v=3&u=4e45871de440c2bd2302a5420358118d6a4950f7&s=140','admin@mail.com','028-1234567','beijing',1,now(),now(),now(),'mobile description.');
+(23,'612025cb3f964a64a48bbdf77e53c2c1','mobile_nickname','532c28d5412dd75bf975fb951c740a30','mobile',1,now(),'https://avatars0.githubusercontent.com/u/7484982?v=3&u=4e45871de440c2bd2302a5420358118d6a4950f7&s=140','mobile@mail.com','028-1234567','beijing',1,now(),now(),now(),'mobile description.');
 
 insert into user_privilege(user_id,privilege) values (23,'MOBILE');
 

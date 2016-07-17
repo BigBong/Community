@@ -1,4 +1,4 @@
-package org.community.api.controller;
+package org.community.api.controller.mobile;
 
 import org.apache.log4j.Logger;
 import org.community.api.service.UserService;
@@ -12,8 +12,8 @@ import java.util.List;
 
 @Controller
 @RequestMapping("m/user")
-public class UserController {
-    private static final Logger logger = Logger.getLogger(UserController.class);
+public class MUserController {
+    private static final Logger logger = Logger.getLogger(MUserController.class);
 
     @Resource(name = "userService")
     private UserService userService;

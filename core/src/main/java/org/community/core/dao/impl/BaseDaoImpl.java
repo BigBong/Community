@@ -4,17 +4,26 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.community.core.dao.BaseDao;
 import org.community.core.dao.ParameterList;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Created by frodo on 2014/12/23.
  */
 public abstract class BaseDaoImpl<T> extends SqlSessionDaoSupport implements BaseDao<T> {
     protected static final Logger logger = LoggerFactory.getLogger(BaseDaoImpl.class);
+
+    @Autowired
+    @Override
+    public void setSqlSessionFactory(SqlSessionFactory sqlSessionFactory) {
+        super.setSqlSessionFactory(sqlSessionFactory);
+    }
 
     @Override
     public int create(T entity) {

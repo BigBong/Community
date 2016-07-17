@@ -7,8 +7,6 @@ http://localhost:8080/spring-oauth-server/oauth/authorize?client_id=unity-client
 http://localhost:8080/spring-oauth-server/oauth/authorize?client_id=mobile-client&redirect_uri=http%3a%2f%2flocalhost%3a8080%2fspring-oauth-server%2fm%2fdashboard&response_type=code&scope=read&state=123456
 
 
-
-
 响应的URL如:
 http://localhost:8080/spring-oauth-server/unity/dashboard.htm?code=zLl170
 

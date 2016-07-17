@@ -1,4 +1,4 @@
-package org.community.api.controller.mobile;
+package org.community.api.controller.web;
 
 import org.community.api.service.UserService;
 import org.community.core.model.pojo.User;
@@ -9,18 +9,24 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
-
+/**
+ * @author Shengzhao Li
+ */
 @Controller
-@RequestMapping("/m/")
-public class MobileController {
+@RequestMapping("web/user")
+public class WUserController {
 
     @Autowired
     private UserService userService;
+
+    @RequestMapping("dashboard")
+    public String dashboard() {
+        return "web/dashboard";
+    }
 
     @RequestMapping("users")
     @ResponseBody
     public List<User> users() {
         return userService.getList();
     }
-
 }

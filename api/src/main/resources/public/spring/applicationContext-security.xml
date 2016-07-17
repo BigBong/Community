@@ -16,8 +16,8 @@
     <!--<debug/>-->
 
     <!--static url pattern-->
-    <http pattern="/resources/**" security="none"/>
-    <http pattern="/oauth/rest_token" security="none"/>
+    <!--<http pattern="/resources/**" security="none"/>-->
+    <!--<http pattern="/oauth/rest_token" security="none"/>-->
 
     <!--
     Oauth server start.............
@@ -27,8 +27,11 @@
     <mvc:annotation-driven/>
     <mvc:default-servlet-handler/>
 
-    <http pattern="/oauth/token" create-session="stateless" authentication-manager-ref="oauth2AuthenticationManager"
-          entry-point-ref="oauth2AuthenticationEntryPoint" use-expressions="false">
+    <http pattern="/oauth/token"
+          create-session="stateless"
+          authentication-manager-ref="oauth2AuthenticationManager"
+          entry-point-ref="oauth2AuthenticationEntryPoint"
+          use-expressions="false">
         <intercept-url pattern="/oauth/token" access="IS_AUTHENTICATED_FULLY"/>
         <anonymous enabled="false"/>
         <http-basic entry-point-ref="oauth2AuthenticationEntryPoint"/>
@@ -43,8 +46,8 @@
         <b:property name="authenticationManager" ref="oauth2AuthenticationManager"/>
     </b:bean>
 
-    <!--unity http configuration-->
-    <http pattern="/unity/**"
+    <!--web http configuration-->
+    <http pattern="/web/**"
           request-matcher="mvc"
           create-session="never"
           entry-point-ref="oauth2AuthenticationEntryPoint"
@@ -52,9 +55,9 @@
           use-expressions="false">
         <anonymous enabled="false"/>
 
-        <intercept-url pattern="/unity/**" access="ROLE_UNITY,SCOPE_READ"/>
+        <intercept-url pattern="/web/**" access="ROLE_WEB,SCOPE_READ"/>
 
-        <custom-filter ref="unityResourceServer" before="PRE_AUTH_FILTER"/>
+        <custom-filter ref="webResourceServer" before="PRE_AUTH_FILTER"/>
         <access-denied-handler ref="oauth2AccessDeniedHandler"/>
         <csrf disabled="true"/>
     </http>
@@ -75,23 +78,27 @@
         <csrf disabled="true"/>
     </http>
 
-    <!--unity resource server filter-->
-    <oauth2:resource-server id="unityResourceServer" resource-id="unity-resource" token-services-ref="tokenServices"/>
+    <!--web resource server filter-->
+    <oauth2:resource-server id="webResourceServer" resource-id="web-resource" token-services-ref="tokenServices"/>
 
     <!--mobile resource server filter-->
     <oauth2:resource-server id="mobileResourceServer" resource-id="mobile-resource" token-services-ref="tokenServices"/>
 
-    <b:bean id="clientDetailsService" class="org.community.api.service.CustomJdbcClientDetailsService">
+    <b:bean id="clientDetailsService"
+            class="org.community.api.service.CustomJdbcClientDetailsService">
         <b:constructor-arg index="0" ref="dataSource"/>
     </b:bean>
 
-    <!--Config token services-->
+    <!--Config token services  将token信息存放数据库-->
     <!--<beans:bean id="tokenStore" class="org.springframework.security.oauth2.provider.token.InMemoryTokenStore"/>-->
-    <b:bean id="tokenStore" class="org.springframework.security.oauth2.provider.token.store.JdbcTokenStore">
+    <b:bean id="tokenStore"
+            class="org.springframework.security.oauth2.provider.token.store.JdbcTokenStore">
         <b:constructor-arg index="0" ref="dataSource"/>
     </b:bean>
 
-    <b:bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
+    <!--TokenServices 需要注入TokenStore-->
+    <b:bean id="tokenServices"
+            class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
         <b:property name="tokenStore" ref="tokenStore"/>
         <b:property name="clientDetailsService" ref="clientDetailsService"/>
         <b:property name="supportRefreshToken" value="true"/>
@@ -104,26 +111,26 @@
     <!--<oauth2:expression-handler id="oauth2ExpressionHandler"/>-->
     <!--<oauth2:web-expression-handler id="oauth2WebExpressionHandler"/>-->
 
-    <b:bean class="org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory"
-            id="oAuth2RequestFactory">
+    <b:bean id="oAuth2RequestFactory"
+            class="org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory">
         <b:constructor-arg name="clientDetailsService" ref="clientDetailsService"/>
     </b:bean>
 
-    <b:bean id="oauthUserApprovalHandler" class="org.community.api.common.OauthUserApprovalHandler">
+    <b:bean id="oauthUserApprovalHandler"
+            class="org.community.api.common.OauthUserApprovalHandler">
         <b:property name="tokenStore" ref="tokenStore"/>
         <b:property name="clientDetailsService" ref="clientDetailsService"/>
         <b:property name="requestFactory" ref="oAuth2RequestFactory"/>
         <b:property name="oauthService" ref="oauthService"/>
     </b:bean>
 
-
     <b:bean id="jdbcAuthorizationCodeServices"
             class="org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices">
         <b:constructor-arg index="0" ref="dataSource"/>
     </b:bean>
 
-
-    <oauth2:authorization-server client-details-service-ref="clientDetailsService" token-services-ref="tokenServices"
+    <oauth2:authorization-server client-details-service-ref="clientDetailsService"
+                                 token-services-ref="tokenServices"
                                  user-approval-handler-ref="oauthUserApprovalHandler"
                                  user-approval-page="oauth_approval"
                                  error-page="oauth_error">
@@ -138,7 +145,7 @@
     <b:bean id="oauth2AuthenticationEntryPoint"
             class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint"/>
 
-
+    <!--ClientDetailsUserDetailsService配置, 该类实现了Spring security中 UserDetailsService 接口-->
     <b:bean id="oauth2ClientDetailsUserService"
             class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
         <b:constructor-arg ref="clientDetailsService"/>
@@ -165,7 +172,7 @@
 
     <http disable-url-rewriting="true" use-expressions="false"
           authentication-manager-ref="authenticationManager">
-        <intercept-url pattern="/oauth/**" access="ROLE_USER,ROLE_UNITY,ROLE_MOBILE"/>
+        <intercept-url pattern="/oauth/**" access="ROLE_USER,ROLE_WEB,ROLE_MOBILE"/>
         <intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 
         <form-login authentication-failure-url="/login.jsp?authentication_error=1" default-target-url="/index.jsp"

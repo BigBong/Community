@@ -1,7 +1,7 @@
 package org.community.api.common;
 
 /**
- * Created by xuwei19 on 2014/12/23.
+ * Created by frodoking on 2014/12/23.
  */
 public interface Secret {
     public static final String PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDNkqpYFbbMgpaN3zaArKukyTz3YC3E4wstE0+tiMDkd+sfOZRzzwZbxsjYHzZxq3N1EuukG0pMYoftMb2zIJY54AmjuZ68pqI5Lz9FOdjor/D5tm5bFgQ8+FNACJHfWa+OkhjZQcl0znxA0xXufd248D6y4nzThK7bUrvKvoCMAQIDAQAB";
