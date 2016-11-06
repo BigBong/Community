@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,6 +34,45 @@ public class DynamicUpdateController {
 
     @Autowired
     private HttpServletRequest request;
+
+
+    @ResponseBody
+    @RequestMapping(value = "file/list")
+    public List<String> files() throws IOException {
+        List<String> filePathArray = new ArrayList<String>();
+        File dir = new File(getUploadFileRoot());
+        if (dir.isDirectory()) {
+            File[] files = dir.listFiles();
+            for (File file: files) {
+                filePathArray.add(file.getName());
+            }
+        }
+
+        return filePathArray;
+    }
+
+    @RequestMapping(value = "file/upload", method = RequestMethod.POST)
+    @ResponseBody
+    public String uploadFile(@RequestParam("file") CommonsMultipartFile file) throws IOException {
+        String path = getUploadFileRoot() + file.getOriginalFilename();
+
+        File newFile = new File(path);
+        file.transferTo(newFile);
+
+        return path;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "file/download")
+    public ResponseEntity<byte[]> downloadFileStream(@RequestParam(value = "fileName") String fileName) throws IOException {
+        final String path = getUploadFileRoot() + fileName;
+        logger.info("download >> [ path: " + path + " ]");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        headers.setContentDispositionFormData("attachment", fileName);
+
+        return new ResponseEntity(FileUtils.readFileToByteArray(new File(path)), headers, HttpStatus.CREATED);
+    }
 
     @RequestMapping(value = "mcf/list")
     @ResponseBody
@@ -110,32 +150,12 @@ public class DynamicUpdateController {
         }
     }
 
-    @ResponseBody
-    @RequestMapping(value = "stream/file")
-    public ResponseEntity<byte[]> downloadFileStream(@RequestParam(value = "fileName") String fileName) throws IOException {
-        final String path = getUploadFileRoot() + fileName;
-        logger.info("download >> [ path: " + path + " ]");
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment", path);
-
-        return new ResponseEntity(FileUtils.readFileToByteArray(new File(path)), headers, HttpStatus.CREATED);
-    }
-
-    @RequestMapping(value = "file")
-    @ResponseBody
-    public FileSystemResource downloadFile(@RequestParam("fileName") String fileName) {
-        final String path = getUploadFileRoot() + fileName;
-        logger.info("getFile >> [ path: " + path + " ]");
-        return new FileSystemResource(path);
-    }
-
     private String getUploadFileRoot() {
         return request.getSession().getServletContext().getRealPath("/") + "/files/";
     }
 
 
-    public static List<Module> modules0() {
+    private static List<Module> modules0() {
         List<Module> list = new ArrayList<Module>();
         list.add(createModule(1));
         list.add(createModule(2));
@@ -189,7 +209,7 @@ public class DynamicUpdateController {
             return moduleId;
         }
 
-        public void setModuleId(int moduleId) {
+        void setModuleId(int moduleId) {
             this.moduleId = moduleId;
         }
 
@@ -197,7 +217,7 @@ public class DynamicUpdateController {
             return moduleName;
         }
 
-        public void setModuleName(String moduleName) {
+        void setModuleName(String moduleName) {
             this.moduleName = moduleName;
         }
 
@@ -205,7 +225,7 @@ public class DynamicUpdateController {
             return moduleVersion;
         }
 
-        public void setModuleVersion(int moduleVersion) {
+        void setModuleVersion(int moduleVersion) {
             this.moduleVersion = moduleVersion;
         }
 
@@ -213,7 +233,7 @@ public class DynamicUpdateController {
             return channel;
         }
 
-        public void setChannel(String channel) {
+        void setChannel(String channel) {
             this.channel = channel;
         }
 
@@ -221,7 +241,7 @@ public class DynamicUpdateController {
             return packageUrl;
         }
 
-        public void setPackageUrl(String packageUrl) {
+        void setPackageUrl(String packageUrl) {
             this.packageUrl = packageUrl;
         }
 
@@ -229,7 +249,7 @@ public class DynamicUpdateController {
             return checkSum;
         }
 
-        public void setCheckSum(int checkSum) {
+        void setCheckSum(int checkSum) {
             this.checkSum = checkSum;
         }
 
@@ -237,7 +257,7 @@ public class DynamicUpdateController {
             return mainFunction;
         }
 
-        public void setMainFunction(String mainFunction) {
+        void setMainFunction(String mainFunction) {
             this.mainFunction = mainFunction;
         }
 
@@ -245,7 +265,7 @@ public class DynamicUpdateController {
             return support;
         }
 
-        public void setSupport(Support support) {
+        void setSupport(Support support) {
             this.support = support;
         }
 
@@ -253,7 +273,7 @@ public class DynamicUpdateController {
             return fileList;
         }
 
-        public void setFileList(List<String> fileList) {
+        void setFileList(List<String> fileList) {
             this.fileList = fileList;
         }
 
@@ -263,7 +283,7 @@ public class DynamicUpdateController {
             private int osMinVersion;
             private int osMaxVersion;
 
-            protected Support(int engineMinVersion, int engineMaxVersion, int osMinVersion, int osMaxVersion) {
+            Support(int engineMinVersion, int engineMaxVersion, int osMinVersion, int osMaxVersion) {
                 this.engineMinVersion = engineMinVersion;
                 this.engineMaxVersion = engineMaxVersion;
                 this.osMinVersion = osMinVersion;

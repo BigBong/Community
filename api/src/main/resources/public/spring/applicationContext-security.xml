@@ -121,7 +121,7 @@
         <b:property name="tokenStore" ref="tokenStore"/>
         <b:property name="clientDetailsService" ref="clientDetailsService"/>
         <b:property name="requestFactory" ref="oAuth2RequestFactory"/>
-        <b:property name="oauthService" ref="oauthService"/>
+        <b:property name="oauthClientDetailsService" ref="oauthClientDetailsService"/>
     </b:bean>
 
     <b:bean id="jdbcAuthorizationCodeServices"

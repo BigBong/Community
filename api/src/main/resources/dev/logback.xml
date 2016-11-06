@@ -103,8 +103,9 @@
     </logger>
 
     <logger name="org.springframework" level="INFO"/>
+    <logger name="org.springframework.security" level="DEBUG"/>
     <logger name="org.apache" level="INFO"/>
-    <logger name="org.mybatis.spring" level="INFO"/>
+    <logger name="org.mybatis.spring" level="DEBUG"/>
     <logger name="net.rubyeye.xmemcached" level="INFO"/>
     <logger name="com.google.code.yanf4j" level="INFO"/>
     <logger name="org.springframework.data.mongodb" level="INFO"/>

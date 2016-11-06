@@ -172,7 +172,7 @@ public class OauthClientDetailsDto implements Serializable {
     }
 
     public static List<OauthClientDetailsDto> toDtos(List<OauthClientDetails> clientDetailses) {
-        List<OauthClientDetailsDto> dtos = new ArrayList<>(clientDetailses.size());
+        List<OauthClientDetailsDto> dtos = new ArrayList<OauthClientDetailsDto>(clientDetailses.size());
         for (OauthClientDetails clientDetailse : clientDetailses) {
             dtos.add(new OauthClientDetailsDto(clientDetailse));
         }

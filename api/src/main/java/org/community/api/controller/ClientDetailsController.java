@@ -2,7 +2,7 @@ package org.community.api.controller;
 
 import org.community.api.common.OauthClientDetailsDtoValidator;
 import org.community.api.model.OauthClientDetailsDto;
-import org.community.api.service.OauthService;
+import org.community.api.service.OauthClientDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +21,7 @@ import java.util.List;
 public class ClientDetailsController {
 
     @Autowired
-    private OauthService oauthService;
+    private OauthClientDetailsService oauthService;
 
     @Autowired
     private OauthClientDetailsDtoValidator clientDetailsDtoValidator;

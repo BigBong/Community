@@ -25,7 +25,7 @@ public class UserDto implements Serializable {
 
     private String createTime;
 
-    private List<Privilege> privileges = new ArrayList<>();
+    private List<Privilege> privileges = new ArrayList<Privilege>();
 
 
     public UserDto() {
@@ -38,7 +38,7 @@ public class UserDto implements Serializable {
         this.phone = user.getPhone();
         this.email = user.getEmail();
 
-        this.privileges = new ArrayList<>();
+        this.privileges = new ArrayList<Privilege>();
         this.createTime = user.getCreatedAt().toLocaleString();
     }
 
@@ -91,7 +91,7 @@ public class UserDto implements Serializable {
     }
 
     public static List<UserDto> toDtos(List<User> users) {
-        List<UserDto> dtos = new ArrayList<>(users.size());
+        List<UserDto> dtos = new ArrayList<UserDto>(users.size());
         for (User user : users) {
             dtos.add(new UserDto(user));
         }

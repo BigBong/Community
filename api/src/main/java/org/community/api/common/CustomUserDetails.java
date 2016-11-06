@@ -20,7 +20,7 @@ public class CustomUserDetails implements UserDetails {
 
     private User user;
 
-    private List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+    private List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
 
     public CustomUserDetails(User user, List<Privilege> privileges) {
         this.user = user;

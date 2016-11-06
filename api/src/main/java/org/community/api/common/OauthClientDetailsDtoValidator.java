@@ -2,7 +2,7 @@ package org.community.api.common;
 
 import org.apache.commons.lang.StringUtils;
 import org.community.api.model.OauthClientDetailsDto;
-import org.community.api.service.OauthService;
+import org.community.api.service.OauthClientDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -13,7 +13,7 @@ import org.springframework.validation.Validator;
 public class OauthClientDetailsDtoValidator implements Validator {
 
     @Autowired
-    private OauthService oauthService;
+    private OauthClientDetailsService oauthClientDetailsService;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -66,7 +66,7 @@ public class OauthClientDetailsDtoValidator implements Validator {
             return;
         }
 
-        OauthClientDetailsDto clientDetailsDto1 = oauthService.loadOauthClientDetailsDto(clientId);
+        OauthClientDetailsDto clientDetailsDto1 = oauthClientDetailsService.loadOauthClientDetailsDto(clientId);
         if (clientDetailsDto1 != null) {
             errors.rejectValue("clientId", null, "client_id [" + clientId + "] 已存在");
         }

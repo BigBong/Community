@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by frodo on 2016/7/15.
  */
-public interface OauthService {
+public interface OauthClientDetailsService {
 
     OauthClientDetails loadOauthClientDetails(String clientId);
 
