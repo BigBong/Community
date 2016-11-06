@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans:beans xmlns="http://www.springframework.org/schema/security"
-             xmlns:beans="http://www.springframework.org/schema/beans"
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xmlns:oauth2="http://www.springframework.org/schema/security/oauth2"
-             xmlns:mvc="http://www.springframework.org/schema/mvc"
-             xsi:schemaLocation="http://www.springframework.org/schema/beans
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:sec="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:oauth2="http://www.springframework.org/schema/security/oauth2"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
                         http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
                         http://www.springframework.org/schema/security
                         http://www.springframework.org/schema/security/spring-security-4.1.xsd
                         http://www.springframework.org/schema/security/oauth2
-                        http://www.springframework.org/schema/security/spring-security-oauth2-2.0.xsd
-                        http://www.springframework.org/schema/mvc
-                        http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
-
-    <mvc:annotation-driven/>
-    <mvc:default-servlet-handler/>
+                        http://www.springframework.org/schema/security/spring-security-oauth2-2.0.xsd">
 
     <!-- 1. OAuth2 related config -->
     <oauth2:authorization-server client-details-service-ref="clientDetailsService"
@@ -30,104 +24,94 @@
     </oauth2:authorization-server>
 
     <!-- 1.1 client detail service 第三方client端信息查询配置-->
-    <beans:bean id="clientDetailsService"
-            class="org.community.api.service.CustomJdbcClientDetailsService">
-        <beans:constructor-arg index="0" ref="dataSource"/>
-    </beans:bean>
+    <bean id="clientDetailsService"
+          class="org.community.api.service.CustomJdbcClientDetailsService">
+        <constructor-arg index="0" ref="dataSource"/>
+    </bean>
 
     <!-- 1.2 Config token services token查询操作相关-->
-    <beans:bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
-        <beans:property name="supportRefreshToken" value="true"/>
-        <beans:property name="tokenStore" ref="tokenStore"/>
-        <beans:property name="clientDetailsService" ref="clientDetailsService"/>
-    </beans:bean>
+    <bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
+        <property name="supportRefreshToken" value="true"/>
+        <property name="tokenStore" ref="tokenStore"/>
+        <property name="clientDetailsService" ref="clientDetailsService"/>
+    </bean>
     <!--Config token services  将token信息存放数据库-->
-    <beans:bean id="tokenStore"
-            class="org.springframework.security.oauth2.provider.token.store.JdbcTokenStore">
-        <beans:constructor-arg index="0" ref="dataSource"/>
-    </beans:bean>
+    <bean id="tokenStore"
+          class="org.springframework.security.oauth2.provider.token.store.JdbcTokenStore">
+        <constructor-arg index="0" ref="dataSource"/>
+    </bean>
 
     <!-- 1.3 oauthUserApprovalHandler 授权code获取-->
-    <beans:bean id="oauthUserApprovalHandler"
-                class="org.community.api.common.OauthUserApprovalHandler">
-        <beans:property name="tokenStore" ref="tokenStore"/>
-        <beans:property name="requestFactory" ref="oAuth2RequestFactory"/>
-        <beans:property name="clientDetailsService" ref="clientDetailsService"/>
-        <beans:property name="oauthClientDetailsService" ref="oauthClientDetailsService"/>
-    </beans:bean>
+    <bean id="oauthUserApprovalHandler"
+          class="org.community.api.common.OauthUserApprovalHandler">
+        <property name="tokenStore" ref="tokenStore"/>
+        <property name="requestFactory" ref="oAuth2RequestFactory"/>
+        <property name="clientDetailsService" ref="clientDetailsService"/>
+        <property name="oauthClientDetailsService" ref="oauthClientDetailsService"/>
+    </bean>
 
-    <beans:bean id="oAuth2RequestFactory"
-            class="org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory">
-        <beans:constructor-arg name="clientDetailsService" ref="clientDetailsService"/>
-    </beans:bean>
+    <bean id="oAuth2RequestFactory"
+          class="org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory">
+        <constructor-arg name="clientDetailsService" ref="clientDetailsService"/>
+    </bean>
 
     <!-- 1.4 authorization code creator 用户授权处理-->
-    <beans:bean id="authorizationCodeServices"
-                class="org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices">
-        <beans:constructor-arg index="0" ref="dataSource"/>
-    </beans:bean>
+    <bean id="authorizationCodeServices"
+          class="org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices">
+        <constructor-arg index="0" ref="dataSource"/>
+    </bean>
 
-    <authentication-manager alias="authenticationManager">
-        <authentication-provider user-service-ref="userService">
-            <password-encoder hash="md5"/>
-        </authentication-provider>
-    </authentication-manager>
+    <sec:authentication-manager alias="authenticationManager">
+        <sec:authentication-provider user-service-ref="userService">
+            <sec:password-encoder hash="md5"/>
+        </sec:authentication-provider>
+    </sec:authentication-manager>
 
     <oauth2:resource-server
             id="userResourceServerFilter"
             resource-id="user"
             token-services-ref="tokenServices"/>
 
-    <!--资源和资源的保护-->
-    <!--<http pattern="/resource/**"
-          create-session="never"
-          entry-point-ref="oauth2AuthenticationEntryPoint"
-          access-decision-manager-ref="oauth2AccessDecisionManager">
-        <anonymous enabled="false"/>
-        <intercept-url pattern="/resource/**" access="ROLE_MOBILE,ROLE_WEB,SCOPE_READ"/>
-        <custom-filter ref="picResourceServer" before="PRE_AUTH_FILTER"/>
-        <access-denied-handler ref="oauth2AccessDeniedHandler"/>
-    </http>-->
-
     <!--mobile resource server filter -->
     <oauth2:resource-server id="picResourceServer"
                             resource-id="pic-resource"
-                            token-services-ref="tokenServices" />
+                            token-services-ref="tokenServices"/>
 
     <!--认证失败，授权失败-->
-    <beans:bean id="oauth2AuthenticationEntryPoint"
-                class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint"/>
+    <bean id="oauth2AuthenticationEntryPoint"
+          class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint"/>
 
-    <beans:bean id="oauth2AccessDeniedHandler"
-                class="org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler"/>
+    <bean id="oauth2AccessDeniedHandler"
+          class="org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler"/>
 
     <!--scope投票机制-->
-    <beans:bean id="oauth2AccessDecisionManager"
-                class="org.springframework.security.access.vote.UnanimousBased">
-        <beans:constructor-arg>
-            <beans:list>
-                <beans:bean class="org.springframework.security.oauth2.provider.vote.ScopeVoter"/>
-                <beans:bean class="org.springframework.security.access.vote.RoleVoter"/>
-                <beans:bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
-            </beans:list>
-        </beans:constructor-arg>
-    </beans:bean>
+    <bean id="oauth2AccessDecisionManager"
+          class="org.springframework.security.access.vote.UnanimousBased">
+        <constructor-arg>
+            <list>
+                <bean class="org.springframework.security.oauth2.provider.vote.ScopeVoter"/>
+                <bean class="org.springframework.security.access.vote.RoleVoter"/>
+                <bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
+            </list>
+        </constructor-arg>
+    </bean>
 
     <!-- 获取 token
 			http://localhost:8080/api/oauth/token?grant_type=password&client_id=restapp&client_secret=restapp&username=admin&password=123456
 		 -->
-    <http pattern="/oauth/token" create-session="stateless"
-              authentication-manager-ref="authenticationManager" >
-        <intercept-url pattern="/oauth/token" access="IS_AUTHENTICATED_FULLY"/>
-        <anonymous enabled="false"/>
-        <http-basic entry-point-ref="oauth2AuthenticationEntryPoint"/>
-        <custom-filter ref="clientCredentialsTokenEndpointFilter" before="BASIC_AUTH_FILTER"/>
-        <access-denied-handler ref="oauth2AccessDeniedHandler"/>
-    </http>
+    <sec:http pattern="/oauth/token" create-session="stateless"
+              authentication-manager-ref="authenticationManager">
+        <sec:intercept-url pattern="/oauth/token" access="IS_AUTHENTICATED_FULLY"/>
+        <sec:anonymous enabled="false"/>
+        <sec:http-basic entry-point-ref="oauth2AuthenticationEntryPoint"/>
+        <sec:custom-filter ref="clientCredentialsTokenEndpointFilter" before="BASIC_AUTH_FILTER"/>
+        <sec:access-denied-handler ref="oauth2AccessDeniedHandler"/>
+    </sec:http>
 
-    <beans:bean id="clientCredentialsTokenEndpointFilter" class="org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter">
-        <beans:property name="authenticationManager" ref="authenticationManager" />
-    </beans:bean>
+    <bean id="clientCredentialsTokenEndpointFilter"
+          class="org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter">
+        <property name="authenticationManager" ref="authenticationManager"/>
+    </bean>
 
     <!--web resource server filter-->
     <oauth2:resource-server id="webResourceServer" resource-id="web-resource" token-services-ref="tokenServices"/>
@@ -136,34 +120,34 @@
     <oauth2:resource-server id="mobileResourceServer" resource-id="mobile-resource" token-services-ref="tokenServices"/>
 
     <!--web http configuration-->
-    <http pattern="/web/**"
-          request-matcher="mvc"
-          create-session="never"
-          entry-point-ref="oauth2AuthenticationEntryPoint"
-          access-decision-manager-ref="oauth2AccessDecisionManager"
-          use-expressions="false">
-        <anonymous enabled="false"/>
+    <sec:http pattern="/web/**"
+              request-matcher="mvc"
+              create-session="never"
+              entry-point-ref="oauth2AuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager"
+              use-expressions="false">
+        <sec:anonymous enabled="false"/>
 
-        <intercept-url pattern="/web/**" access="ROLE_WEB,SCOPE_READ"/>
+        <sec:intercept-url pattern="/web/**" access="ROLE_WEB,SCOPE_READ"/>
 
-        <custom-filter ref="webResourceServer" before="PRE_AUTH_FILTER"/>
-        <access-denied-handler ref="oauth2AccessDeniedHandler"/>
-        <csrf disabled="true"/>
-    </http>
+        <sec:custom-filter ref="webResourceServer" before="PRE_AUTH_FILTER"/>
+        <sec:access-denied-handler ref="oauth2AccessDeniedHandler"/>
+        <sec:csrf disabled="true"/>
+    </sec:http>
 
     <!--mobile http configuration-->
-    <http pattern="/m/**"
-          request-matcher="mvc"
-          create-session="never"
-          entry-point-ref="oauth2AuthenticationEntryPoint"
-          access-decision-manager-ref="oauth2AccessDecisionManager"
-          use-expressions="false">
-        <anonymous enabled="false"/>
+    <sec:http pattern="/m/**"
+              request-matcher="mvc"
+              create-session="never"
+              entry-point-ref="oauth2AuthenticationEntryPoint"
+              access-decision-manager-ref="oauth2AccessDecisionManager"
+              use-expressions="false">
+        <sec:anonymous enabled="false"/>
 
-        <intercept-url pattern="/m/**" access="ROLE_MOBILE,SCOPE_READ"/>
+        <sec:intercept-url pattern="/m/**" access="ROLE_MOBILE,SCOPE_READ"/>
 
-        <custom-filter ref="mobileResourceServer" before="PRE_AUTH_FILTER"/>
-        <access-denied-handler ref="oauth2AccessDeniedHandler"/>
-        <csrf disabled="true"/>
-    </http>
-</beans:beans>
+        <sec:custom-filter ref="mobileResourceServer" before="PRE_AUTH_FILTER"/>
+        <sec:access-denied-handler ref="oauth2AccessDeniedHandler"/>
+        <sec:csrf disabled="true"/>
+    </sec:http>
+</beans>

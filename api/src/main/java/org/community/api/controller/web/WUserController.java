@@ -9,9 +9,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
-/**
- * @author Shengzhao Li
- */
 @Controller
 @RequestMapping("web/user")
 public class WUserController {
