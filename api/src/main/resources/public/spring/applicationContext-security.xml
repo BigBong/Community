@@ -10,6 +10,24 @@
                         http://www.springframework.org/schema/security/oauth2
                         http://www.springframework.org/schema/security/spring-security-oauth2-2.0.xsd">
 
+    <!-- 获取 token
+			http://localhost:8080/api/oauth/token?grant_type=password&client_id=restapp&client_secret=restapp&username=admin&password=123456
+		 -->
+    <!-- Definition of the Authentication Service -->
+    <sec:http pattern="/oauth/token" create-session="stateless"
+              authentication-manager-ref="authenticationManager">
+        <sec:intercept-url pattern="/oauth/token" access="IS_AUTHENTICATED_FULLY"/>
+        <sec:anonymous enabled="false"/>
+        <sec:http-basic entry-point-ref="oauth2AuthenticationEntryPoint"/>
+        <sec:custom-filter ref="clientCredentialsTokenEndpointFilter" before="BASIC_AUTH_FILTER"/>
+        <sec:access-denied-handler ref="oauth2AccessDeniedHandler"/>
+    </sec:http>
+
+    <bean id="clientCredentialsTokenEndpointFilter"
+          class="org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter">
+        <property name="authenticationManager" ref="authenticationManager"/>
+    </bean>
+
     <!-- 1. OAuth2 related config -->
     <oauth2:authorization-server client-details-service-ref="clientDetailsService"
                                  token-services-ref="tokenServices"
@@ -31,7 +49,8 @@
 
     <!-- 1.2 Config token services token查询操作相关-->
     <bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
-        <property name="supportRefreshToken" value="true"/>
+        <property name="supportRefreshToken" value="true" />
+        <property name="accessTokenValiditySeconds" value="2592000" />
         <property name="tokenStore" ref="tokenStore"/>
         <property name="clientDetailsService" ref="clientDetailsService"/>
     </bean>
@@ -46,13 +65,13 @@
           class="org.community.api.common.OauthUserApprovalHandler">
         <property name="tokenStore" ref="tokenStore"/>
         <property name="requestFactory" ref="oAuth2RequestFactory"/>
-        <property name="clientDetailsService" ref="clientDetailsService"/>
         <property name="oauthClientDetailsService" ref="oauthClientDetailsService"/>
     </bean>
 
     <bean id="oAuth2RequestFactory"
           class="org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory">
         <constructor-arg name="clientDetailsService" ref="clientDetailsService"/>
+        <property name="checkUserScopes" value="false"/>
     </bean>
 
     <!-- 1.4 authorization code creator 用户授权处理-->
@@ -61,21 +80,15 @@
         <constructor-arg index="0" ref="dataSource"/>
     </bean>
 
+    <sec:authentication-manager id="clientAuthenticationManager">
+        <sec:authentication-provider user-service-ref="userService"/>
+    </sec:authentication-manager>
+
     <sec:authentication-manager alias="authenticationManager">
         <sec:authentication-provider user-service-ref="userService">
             <sec:password-encoder hash="md5"/>
         </sec:authentication-provider>
     </sec:authentication-manager>
-
-    <oauth2:resource-server
-            id="userResourceServerFilter"
-            resource-id="user"
-            token-services-ref="tokenServices"/>
-
-    <!--mobile resource server filter -->
-    <oauth2:resource-server id="picResourceServer"
-                            resource-id="pic-resource"
-                            token-services-ref="tokenServices"/>
 
     <!--认证失败，授权失败-->
     <bean id="oauth2AuthenticationEntryPoint"
@@ -96,26 +109,8 @@
         </constructor-arg>
     </bean>
 
-    <!-- 获取 token
-			http://localhost:8080/api/oauth/token?grant_type=password&client_id=restapp&client_secret=restapp&username=admin&password=123456
-		 -->
-    <sec:http pattern="/oauth/token" create-session="stateless"
-              authentication-manager-ref="authenticationManager">
-        <sec:intercept-url pattern="/oauth/token" access="IS_AUTHENTICATED_FULLY"/>
-        <sec:anonymous enabled="false"/>
-        <sec:http-basic entry-point-ref="oauth2AuthenticationEntryPoint"/>
-        <sec:custom-filter ref="clientCredentialsTokenEndpointFilter" before="BASIC_AUTH_FILTER"/>
-        <sec:access-denied-handler ref="oauth2AccessDeniedHandler"/>
-    </sec:http>
-
-    <bean id="clientCredentialsTokenEndpointFilter"
-          class="org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter">
-        <property name="authenticationManager" ref="authenticationManager"/>
-    </bean>
-
     <!--web resource server filter-->
     <oauth2:resource-server id="webResourceServer" resource-id="web-resource" token-services-ref="tokenServices"/>
-
     <!--mobile resource server filter-->
     <oauth2:resource-server id="mobileResourceServer" resource-id="mobile-resource" token-services-ref="tokenServices"/>
 
