@@ -42,8 +42,7 @@
     </oauth2:authorization-server>
 
     <!-- 1.1 client detail service 第三方client端信息查询配置-->
-    <bean id="clientDetailsService"
-          class="org.community.api.service.CustomJdbcClientDetailsService">
+    <bean id="clientDetailsService" class="org.springframework.security.oauth2.provider.client.JdbcClientDetailsService">
         <constructor-arg index="0" ref="dataSource"/>
     </bean>
 
@@ -80,8 +79,12 @@
         <constructor-arg index="0" ref="dataSource"/>
     </bean>
 
+    <bean id="clientDetailsUserDetailsService" class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
+        <constructor-arg ref="clientDetailsService" />
+    </bean>
+
     <sec:authentication-manager id="clientAuthenticationManager">
-        <sec:authentication-provider user-service-ref="userService"/>
+        <sec:authentication-provider user-service-ref="clientDetailsUserDetailsService"/>
     </sec:authentication-manager>
 
     <sec:authentication-manager alias="authenticationManager">

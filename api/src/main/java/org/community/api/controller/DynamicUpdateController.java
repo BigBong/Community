@@ -1,15 +1,8 @@
 package org.community.api.controller;
 
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,45 +27,6 @@ public class DynamicUpdateController {
 
     @Autowired
     private HttpServletRequest request;
-
-
-    @ResponseBody
-    @RequestMapping(value = "file/list")
-    public List<String> files() throws IOException {
-        List<String> filePathArray = new ArrayList<String>();
-        File dir = new File(getUploadFileRoot());
-        if (dir.isDirectory()) {
-            File[] files = dir.listFiles();
-            for (File file: files) {
-                filePathArray.add(file.getName());
-            }
-        }
-
-        return filePathArray;
-    }
-
-    @RequestMapping(value = "file/upload", method = RequestMethod.POST)
-    @ResponseBody
-    public String uploadFile(@RequestParam("file") CommonsMultipartFile file) throws IOException {
-        String path = getUploadFileRoot() + file.getOriginalFilename();
-
-        File newFile = new File(path);
-        file.transferTo(newFile);
-
-        return path;
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "file/download")
-    public ResponseEntity<byte[]> downloadFileStream(@RequestParam(value = "fileName") String fileName) throws IOException {
-        final String path = getUploadFileRoot() + fileName;
-        logger.info("download >> [ path: " + path + " ]");
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment", fileName);
-
-        return new ResponseEntity(FileUtils.readFileToByteArray(new File(path)), headers, HttpStatus.CREATED);
-    }
 
     @RequestMapping(value = "mcf/list")
     @ResponseBody
