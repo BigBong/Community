@@ -1,14 +1,13 @@
 package org.community.api.controller.mobile;
 
 import org.apache.log4j.Logger;
-import org.community.api.service.UserService;
+import org.community.api.service.CustomUserDetailsService;
 import org.community.core.common.ReturnMsg;
 import org.community.core.model.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 @Controller
@@ -17,7 +16,7 @@ public class MUserController {
     private static final Logger logger = Logger.getLogger(MUserController.class);
 
     @Autowired
-    private UserService userService;
+    private CustomUserDetailsService userService;
 
     @RequestMapping(value = "{username}")
     @ResponseBody

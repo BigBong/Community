@@ -18,16 +18,6 @@
     <!-- 多个包名用逗号隔开, 但不能有空格 -->
     <context:component-scan base-package="org.community.api.controller"/>
 
-    <!-- Configures Handler Interceptors -->
-    <mvc:interceptors>
-        <bean id="securityInterceptor" class="org.community.api.service.SecurityInterceptor"/>
-        <!-- Changes the locale when a 'locale' request parameter is sent; e.g. /?locale=de -->
-        <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
-            <property name="paramName" value="locale"/>
-        </bean>
-
-    </mvc:interceptors>
-
     <!-- Saves a locale change using a cookie -->
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
         <property name="defaultLocale">

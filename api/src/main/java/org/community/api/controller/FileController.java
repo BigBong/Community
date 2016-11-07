@@ -71,7 +71,7 @@ public class FileController {
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         headers.setContentDispositionFormData("attachment", fileName);
 
-        return new ResponseEntity(FileUtils.readFileToByteArray(new File(path)), headers, HttpStatus.CREATED);
+        return new ResponseEntity<byte[]>(FileUtils.readFileToByteArray(new File(path)), headers, HttpStatus.CREATED);
     }
 
     private String getUploadFileRoot() {

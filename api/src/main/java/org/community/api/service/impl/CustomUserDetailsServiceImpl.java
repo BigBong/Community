@@ -3,23 +3,20 @@ package org.community.api.service.impl;
 import org.community.api.common.CustomUserDetails;
 import org.community.core.common.Privilege;
 import org.community.core.dao.UserDao;
-import org.community.api.service.UserService;
+import org.community.api.service.CustomUserDetailsService;
 import org.community.core.model.pojo.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.oauth2.common.util.JsonParser;
-import org.springframework.security.oauth2.common.util.JsonParserFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
-@Service("userService")
-public class UserServiceImpl implements UserService {
-    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+@Service("customUserDetailsService")
+public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
+    private static final Logger logger = LoggerFactory.getLogger(CustomUserDetailsServiceImpl.class);
 
     @Autowired
     private UserDao userDao;

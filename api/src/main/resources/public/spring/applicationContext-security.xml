@@ -31,7 +31,7 @@
     <!-- 1. OAuth2 related config -->
     <oauth2:authorization-server client-details-service-ref="clientDetailsService"
                                  token-services-ref="tokenServices"
-                                 user-approval-handler-ref="oauthUserApprovalHandler"
+                                 user-approval-handler-ref="userApprovalHandler"
                                  user-approval-page="oauth_approval"
                                  error-page="oauth_error">
         <oauth2:authorization-code authorization-code-services-ref="authorizationCodeServices"/>
@@ -60,9 +60,10 @@
     </bean>
 
     <!-- 1.3 oauthUserApprovalHandler 授权code获取-->
-    <bean id="oauthUserApprovalHandler"
+    <bean id="userApprovalHandler"
           class="org.community.api.common.OauthUserApprovalHandler">
         <property name="tokenStore" ref="tokenStore"/>
+        <property name="clientDetailsService" ref="clientDetailsService"/>
         <property name="requestFactory" ref="oAuth2RequestFactory"/>
         <property name="oauthClientDetailsService" ref="oauthClientDetailsService"/>
     </bean>
@@ -79,17 +80,10 @@
         <constructor-arg index="0" ref="dataSource"/>
     </bean>
 
-    <bean id="clientDetailsUserDetailsService" class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
-        <constructor-arg ref="clientDetailsService" />
-    </bean>
-
+    <!-- 认证管理器，使用自定义的UserDetailsService，并对密码采用md5加密 (默认ClientDetailsUserDetailsService) -->
     <sec:authentication-manager id="clientAuthenticationManager">
-        <sec:authentication-provider user-service-ref="clientDetailsUserDetailsService"/>
-    </sec:authentication-manager>
-
-    <sec:authentication-manager alias="authenticationManager">
-        <sec:authentication-provider user-service-ref="userService">
-            <sec:password-encoder hash="md5"/>
+        <sec:authentication-provider user-service-ref="customUserDetailsService" >
+            <sec:password-encoder hash="md5" />
         </sec:authentication-provider>
     </sec:authentication-manager>
 
