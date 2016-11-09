@@ -78,9 +78,7 @@ public class FileUtils {
      * @param output
      * @param buffer
      * @param progress
-     *
      * @return
-     *
      * @throws IOException
      */
     public static long copyLarge(InputStream input, OutputStream output, byte[] buffer, Progress progress)

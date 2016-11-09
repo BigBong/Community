@@ -1,20 +1,4 @@
-<#import "spring.ftl" as s />
-<!DOCTYPE>
-<html>
-<head>
-    <link rel="stylesheet" type="text/css" href="<@s.url '/css/bootstrap.css'/>"/>
-    <link rel="stylesheet" type="text/css" href="<@s.url '/css/bootstrap-theme.css'/>"/>
-    <style>
-        body {
-            height: 100%;
-            margin: 0;
-            background-size: 1440px 800px;
-            background: url("<@s.url '/img/books.jpg'/>") no-repeat;
-            display: compact;
-        }
-    </style>
-</head>
-<body>
+<#macro header >
 <div class="navbar navbar-default">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse"
@@ -44,20 +28,4 @@
     </div>
     <!-- /.nav-collapse -->
 </div>
-<div class="container">
-    <div class="jumbotron">
-        <div>
-            <h1>Welcome to Online Student Enrollment!</h1>
-
-            <p>To get started, you need to enter your details to enroll with
-                us. Or login to access your details, if you are already enrolled.</p>
-        </div>
-
-        <a class="btn btn-primary" href="signup">Signup</a>
-        <a class="btn btn-primary" href="login">Login</a>
-    </div>
-</div>
-<script type="text/javascript" src="<@s.url '/js/jquery-2.1.3.js'/>"></script>
-<script type="text/javascript" src="<@s.url '/js/bootstrap.js'/>"></script>
-</body>
-</html>
+</#macro>

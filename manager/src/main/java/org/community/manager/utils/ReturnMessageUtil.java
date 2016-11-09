@@ -18,7 +18,6 @@ public class ReturnMessageUtil {
      * 创建校验性错误消息（ajax用）,校验框架异常用
      *
      * @param errors 错误集合
-     *
      * @return json串
      */
     public static String createValidationErrorMsg(List<ObjectError> errors) {
@@ -34,7 +33,6 @@ public class ReturnMessageUtil {
      * 创建成功的消息（ajax用）
      *
      * @param ro
-     *
      * @return json串
      */
     public static String createOKMsg(Object ro) {
@@ -48,7 +46,6 @@ public class ReturnMessageUtil {
      * 创建异常消息
      *
      * @param e
-     *
      * @return
      */
     public static String createExceptionMsg(Exception e) {
@@ -62,7 +59,6 @@ public class ReturnMessageUtil {
      * 创建校验性错误消息（ajax用）,普通字段用
      *
      * @param msg 错误消息
-     *
      * @return
      */
     public static String createErrorMsg(String msg) {
@@ -76,7 +72,6 @@ public class ReturnMessageUtil {
      * 创建not found消息
      *
      * @param msg
-     *
      * @return
      */
     public static String createNotFoundMsg(String msg) {
@@ -91,7 +86,6 @@ public class ReturnMessageUtil {
      *
      * @param ro
      * @param callback
-     *
      * @return
      */
     public static String createOKMsg(Object ro, String callback) {
@@ -112,7 +106,6 @@ public class ReturnMessageUtil {
      *
      * @param msg
      * @param callback
-     *
      * @return
      */
     public static String createErrorMsg(String msg, String callback) {
@@ -133,7 +126,6 @@ public class ReturnMessageUtil {
      *
      * @param msg
      * @param callback
-     *
      * @return
      */
     public static String createNotFoundMsg(String msg, String callback) {

@@ -10,11 +10,12 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created by frodo on 2014/12/30.
  */
-@Service
+@Service("fileUploadService")
 public class FileUploadServiceImpl implements FileUploadService {
 
     private static final Logger logger = LoggerFactory.getLogger(FileUploadServiceImpl.class);
@@ -47,6 +48,11 @@ public class FileUploadServiceImpl implements FileUploadService {
             logger.info("无匹配文件,md5:{}", md5);
         }
         return fileUpload;
+    }
+
+    @Override
+    public List<LocalFile> list() {
+        return fileUploadDao.list();
     }
 
 }

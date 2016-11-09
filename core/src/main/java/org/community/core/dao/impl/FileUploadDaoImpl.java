@@ -7,10 +7,12 @@ import org.community.core.model.mapper.LocalFileMapper;
 import org.community.core.model.pojo.LocalFile;
 import org.community.core.model.pojo.LocalFileExample;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 /**
  * Created by frodo on 2015/4/8.
  */
+@Repository("fileUploadDao")
 public class FileUploadDaoImpl extends BaseDaoImpl<LocalFile> implements FileUploadDao {
 
     @Autowired
@@ -57,6 +59,12 @@ public class FileUploadDaoImpl extends BaseDaoImpl<LocalFile> implements FileUpl
     @Override
     public int insertAndGetId(LocalFile fileUpload) {
         return 0;
+    }
+
+    @Override
+    public List<LocalFile> list() {
+        LocalFileExample example = new LocalFileExample();
+        return localFileMapper.selectByExample(example);
     }
 
 }

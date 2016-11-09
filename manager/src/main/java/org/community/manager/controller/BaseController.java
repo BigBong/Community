@@ -18,12 +18,6 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 public class BaseController {
     private static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 
-    /**
-     * 异常处理
-     * @param ex
-     * @param request
-     * @param response
-     */
     @ExceptionHandler(Exception.class)
     public void handleException(Exception ex, HttpServletRequest request, HttpServletResponse response) {
         StringBuffer sb = new StringBuffer();

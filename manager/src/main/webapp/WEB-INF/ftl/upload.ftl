@@ -15,7 +15,6 @@
             <div class="row">
                 <div class="col-lg-6">
                     <div class="form-group">
-
                         <div class="col-lg-9">
                             <form id="formUpload" method="post" action="${ctx.getContextPath()}/file/upload"
                                   enctype="multipart/form-data">

@@ -3,12 +3,14 @@ package org.community.manager.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.community.core.common.ReturnMsg;
 import org.community.core.model.pojo.LocalFile;
+import org.community.core.model.pojo.User;
 import org.community.manager.service.FileUploadService;
 import org.community.manager.utils.DateUtil;
 import org.community.manager.utils.FileUtils;
@@ -45,6 +47,12 @@ public class FileUploadController extends BaseController {
     @RequestMapping(value = "/home", method = RequestMethod.GET)
     public String home(Model model) {
         return "upload";
+    }
+
+    @RequestMapping(value = "list")
+    @ResponseBody
+    public List<LocalFile> list() {
+        return fileUploadService.list();
     }
 
     /**
@@ -181,13 +189,13 @@ public class FileUploadController extends BaseController {
         LocalFile fileUpload = new LocalFile();
         fileUpload.setMd5(FileUtils.getMd5ByFile(saveFile));
         fileUpload.setFileName(saveFile.getName());
-        fileUpload.setPath(saveFile.getAbsolutePath());
+        fileUpload.setPath(saveFile.getPath());
         fileUpload.setUpdateTime(new Date());
         fileUpload.setCreateTime(new Date());
         fileUpload.setFileSize(fileSize);
         fileUpload.setFileTotalSize(totalFileSize);
         fileUpload.setStatus(fileSize != totalFileSize ? 0 : 1);
-        fileUpload.setDescription("上传文件" + saveFile.getAbsolutePath());
+        fileUpload.setDescription("上传文件" + saveFile.getPath());
         fileUploadService.save(fileUpload);
         logger.info("finish insert record current operation to mysql!");
         return fileUpload;

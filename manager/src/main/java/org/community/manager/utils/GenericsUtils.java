@@ -21,8 +21,7 @@ public class GenericsUtils {
      * 通过反射,获得定义Class时声明的父类的范型参数的类型. 19 * 如public BookManager extends
      * GenricManager<Book> 20 * 21 * @param clazz clazz The class to introspect
      *
-     * @param index
-     *            the Index of the generic ddeclaration,start from 0. 23
+     * @param index the Index of the generic ddeclaration,start from 0. 23
      */
     public static Class getSuperClassGenricType(Class clazz, int index)
             throws IndexOutOfBoundsException {

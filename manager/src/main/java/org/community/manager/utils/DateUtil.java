@@ -11,7 +11,7 @@ import java.util.Date;
  */
 public class DateUtil {
 
-    public static Timestamp date2Timestamp(Date date){
+    public static Timestamp date2Timestamp(Date date) {
         Assert.notNull(date);
         return new Timestamp(date.getTime());
     }

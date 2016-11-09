@@ -76,4 +76,9 @@
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="org.community.core.model.mapper"/>
     </bean>
+
+    <!--dao-->
+    <context:component-scan base-package="org.community.core.dao"/>
+    <!--service-->
+    <context:component-scan base-package="org.community.manager.service"/>
 </beans>
