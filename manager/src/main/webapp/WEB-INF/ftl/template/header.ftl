@@ -1,31 +1,25 @@
 <#macro header >
-<div class="navbar navbar-default">
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse"
-                data-target=".navbar-responsive-collapse">
-            <span class="icon-bar"></span> <span class="icon-bar"></span> <span
-                class="icon-bar"></span>
-        </button>
+<div id="navbar-main">
+      <!-- Fixed navbar -->
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon icon-shield" style="font-size:30px; color:#3498db;"></span>
+          </button>
+          <a class="navbar-brand hidden-xs hidden-sm" href="#home"><span class="icon icon-shield" style="font-size:18px; color:#3498db;"></span></a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="#home" class="smoothScroll">Home</a></li>
+			<li> <a href="#about" class="smoothScroll"> About</a></li>
+			<li> <a href="#services" class="smoothScroll"> Services</a></li>
+			<li> <a href="#team" class="smoothScroll"> Team</a></li>
+			<li> <a href="#portfolio" class="smoothScroll"> Portfolio</a></li>
+			<li> <a href="#blog" class="smoothScroll"> Blog</a></li>
+			<li> <a href="#contact" class="smoothScroll"> Contact</a></li>
+        </div><!--/.nav-collapse -->
+      </div>
     </div>
-
-    <div class="navbar-collapse collapse navbar-responsive-collapse">
-        <form class="navbar-form navbar-right">
-            <input type="text" class="form-control" placeholder="Search">
-        </form>
-        <ul class="nav navbar-nav navbar-right">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="signup">Signup</a></li>
-            <li><a href="login">Login</a></li>
-            <li class="dropdown"><a href="#" class="dropdown-toggle"
-                                    data-toggle="dropdown">Explore<b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                    <li><a href="#">Contact us</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#">Further Actions</a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-    <!-- /.nav-collapse -->
 </div>
 </#macro>
