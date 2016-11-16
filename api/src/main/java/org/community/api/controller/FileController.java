@@ -41,7 +41,7 @@ public class FileController {
         }
         file.transferTo(newFile);
 
-        return "/api/fileSystem/download/" + file.getOriginalFilename();
+        return "/api/fileSystem/file/" + file.getOriginalFilename();
     }
 
     @ResponseBody
