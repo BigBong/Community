@@ -1,6 +1,5 @@
 package org.community.api.common;
 
-import org.community.core.common.Privilege;
 import org.community.core.model.pojo.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,25 +12,31 @@ import java.util.List;
 /**
  * Created by frodo on 2016/7/16.
  */
-public class CustomUserDetails implements UserDetails {
+public class OauthUserDetails implements UserDetails {
 
-    private static final String ROLE_PREFIX = "ROLE_";
-    private static final GrantedAuthority DEFAULT_USER_ROLE = new SimpleGrantedAuthority(ROLE_PREFIX + Privilege.USER.name());
+    private static final GrantedAuthority DEFAULT_USER_ROLE = new SimpleGrantedAuthority("ROLE_USER");
 
     private User user;
 
     private List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
 
-    public CustomUserDetails(User user, List<Privilege> privileges) {
+    public OauthUserDetails(User user, String privileges) {
         this.user = user;
         initialAuthorities(privileges);
     }
 
-    private void initialAuthorities(List<Privilege> privileges) {
+    private void initialAuthorities(String privileges) {
         //Default, everyone have it
         this.grantedAuthorities.add(DEFAULT_USER_ROLE);
-        for (Privilege privilege : privileges) {
-            this.grantedAuthorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + privilege.name()));
+        if (privileges != null && !privileges.isEmpty()) {
+            if (privileges.contains(",")) {
+                String[] array = privileges.split(",");
+                for (String privilege : array) {
+                    this.grantedAuthorities.add(new SimpleGrantedAuthority(privilege));
+                }
+            } else {
+                this.grantedAuthorities.add(new SimpleGrantedAuthority(privileges));
+            }
         }
     }
 
@@ -52,12 +57,12 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return user.getArchived();
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return user.getArchived();
     }
 
     @Override
@@ -67,11 +72,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
-    }
-
-    public User user() {
-        return user;
+        return user.getArchived();
     }
 
     @Override

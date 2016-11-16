@@ -67,7 +67,7 @@
           class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
         <!-- 指定所上传文件的总大小不能超过配置的值......注意maxUploadSize属性的限制不是针对单个文件,而是所有文件的容量之和 -->
         <property name="defaultEncoding" value="UTF-8"/>
-        <property name="maxUploadSize" value="10000000"/>
+        <property name="maxUploadSize" value="-1"/>
         <property name="resolveLazily" value="true"/>
     </bean>
 </beans>

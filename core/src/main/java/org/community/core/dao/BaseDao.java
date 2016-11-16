@@ -9,14 +9,23 @@ import java.util.Map;
  * Created by frodo on 2014/12/23.
  */
 public interface BaseDao<T> {
-    public int create(T entity);
-    public int update(T entity);
-    public int update(Map<String, Object> params, Object[] ids);
-    public int delete(Serializable pk);
-    public int delete(int[] pks);
-    public void deleteAll();
-    public T get(int pk);
-    public List<T> getByIds(int[] pks);
-    public int countByParameters(ParameterList params);
-    public Map<String,Object> mapByParameters(int pageNo, int pageSize, ParameterList params, String orderBy);
+    int create(T entity);
+
+    int update(T entity);
+
+    int update(Map<String, Object> params, Object[] ids);
+
+    int delete(Serializable pk);
+
+    int delete(int[] pks);
+
+    void deleteAll();
+
+    T get(int pk);
+
+    List<T> getByIds(int[] pks);
+
+    int countByParameters(ParameterList params);
+
+    Map<String, Object> mapByParameters(int pageNo, int pageSize, ParameterList params, String orderBy);
 }

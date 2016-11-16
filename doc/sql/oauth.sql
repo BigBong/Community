@@ -10,7 +10,7 @@ create table oauth_client_details (
     access_token_validity INTEGER,
     refresh_token_validity INTEGER,
     additional_information VARCHAR(4096),
-    autoapprove VARCHAR(256),
+    autoapprove VARCHAR(256)
 );
 
 Drop table  if exists oauth_client_token;
@@ -47,15 +47,6 @@ create table oauth_code (
 );
 
 
--- Add indexes
-create index token_id_index on oauth_access_token (token_id);
-create index authentication_id_index on oauth_access_token (authentication_id);
-create index user_name_index on oauth_access_token (user_name);
-create index client_id_index on oauth_access_token (client_id);
-create index refresh_token_index on oauth_access_token (refresh_token);
 
-create index token_id_index on oauth_refresh_token (token_id);
-
-create index code_index on oauth_code (code);
 
 

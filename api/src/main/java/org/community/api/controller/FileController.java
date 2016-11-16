@@ -9,10 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,8 +30,22 @@ public class FileController {
     @Autowired
     private HttpServletRequest request;
 
+    @RequestMapping(value = "upload", method = RequestMethod.POST)
     @ResponseBody
-    @RequestMapping(value = "list")
+    public String uploadFile(@RequestParam("file") CommonsMultipartFile file) throws IOException {
+        String path = getUploadFileRoot() + file.getOriginalFilename();
+
+        File newFile = new File(path);
+        if (newFile.isFile() && newFile.exists()) {
+            newFile.delete();
+        }
+        file.transferTo(newFile);
+
+        return "/api/fileSystem/download/" + file.getOriginalFilename();
+    }
+
+    @ResponseBody
+    @RequestMapping("list")
     public List<String> files() throws IOException {
         List<String> filePathArray = new ArrayList<String>();
         File dir = new File(getUploadFileRoot());
@@ -48,23 +59,9 @@ public class FileController {
         return filePathArray;
     }
 
-    @RequestMapping(value = "upload", method = RequestMethod.POST)
     @ResponseBody
-    public String uploadFile(@RequestParam("file") CommonsMultipartFile file) throws IOException {
-        String path = getUploadFileRoot() + file.getOriginalFilename();
-
-        File newFile = new File(path);
-        if (newFile.isFile() && newFile.exists()) {
-            newFile.delete();
-        }
-        file.transferTo(newFile);
-
-        return "/api/fileSystem/download?fileName=" + file.getOriginalFilename();
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "download")
-    public ResponseEntity<byte[]> downloadFile(@RequestParam(value = "fileName") String fileName) throws IOException {
+    @RequestMapping("file/{fileName:.+}")
+    public ResponseEntity<byte[]> downloadFile(@PathVariable(value = "fileName") String fileName) throws IOException {
         final String path = getUploadFileRoot() + fileName;
         logger.info("download >> [ path: " + path + " ]");
         HttpHeaders headers = new HttpHeaders();

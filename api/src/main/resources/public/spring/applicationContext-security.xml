@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
        xmlns:sec="http://www.springframework.org/schema/security"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:oauth2="http://www.springframework.org/schema/security/oauth2"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                         http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context.xsd
                         http://www.springframework.org/schema/security
                         http://www.springframework.org/schema/security/spring-security-4.1.xsd
                         http://www.springframework.org/schema/security/oauth2
                         http://www.springframework.org/schema/security/spring-security-oauth2-2.0.xsd">
+
+    <!--<context:component-scan base-package="org.community.api.config"/>-->
 
     <!-- 获取 token
 			http://localhost:8080/api/oauth/token?grant_type=password&client_id=restapp&client_secret=restapp&username=admin&password=123456
@@ -21,11 +26,13 @@
         <sec:http-basic entry-point-ref="oauth2AuthenticationEntryPoint"/>
         <sec:custom-filter ref="clientCredentialsTokenEndpointFilter" before="BASIC_AUTH_FILTER"/>
         <sec:access-denied-handler ref="oauth2AccessDeniedHandler"/>
+        <sec:csrf disabled="true"/>
     </sec:http>
 
     <bean id="clientCredentialsTokenEndpointFilter"
           class="org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter">
         <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="allowOnlyPost" value="true"/>
     </bean>
 
     <!-- 1. OAuth2 related config -->
@@ -42,14 +49,15 @@
     </oauth2:authorization-server>
 
     <!-- 1.1 client detail service 第三方client端信息查询配置-->
-    <bean id="clientDetailsService" class="org.springframework.security.oauth2.provider.client.JdbcClientDetailsService">
+    <bean id="clientDetailsService"
+          class="org.springframework.security.oauth2.provider.client.JdbcClientDetailsService">
         <constructor-arg index="0" ref="dataSource"/>
     </bean>
 
     <!-- 1.2 Config token services token查询操作相关-->
     <bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
-        <property name="supportRefreshToken" value="true" />
-        <property name="accessTokenValiditySeconds" value="2592000" />
+        <property name="supportRefreshToken" value="true"/>
+        <property name="accessTokenValiditySeconds" value="300000"/>
         <property name="tokenStore" ref="tokenStore"/>
         <property name="clientDetailsService" ref="clientDetailsService"/>
     </bean>
@@ -59,19 +67,20 @@
         <constructor-arg index="0" ref="dataSource"/>
     </bean>
 
-    <!-- 1.3 oauthUserApprovalHandler 授权code获取-->
-    <bean id="userApprovalHandler"
-          class="org.community.api.common.OauthUserApprovalHandler">
+    <bean id="approvalStore" class="org.springframework.security.oauth2.provider.approval.TokenApprovalStore">
         <property name="tokenStore" ref="tokenStore"/>
-        <property name="clientDetailsService" ref="clientDetailsService"/>
-        <property name="requestFactory" ref="oAuth2RequestFactory"/>
-        <property name="oauthClientDetailsService" ref="oauthClientDetailsService"/>
     </bean>
 
-    <bean id="oAuth2RequestFactory"
-          class="org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory">
-        <constructor-arg name="clientDetailsService" ref="clientDetailsService"/>
-        <property name="checkUserScopes" value="false"/>
+    <!-- 1.3 oauthUserApprovalHandler 授权code获取-->
+    <bean id="userApprovalHandler"
+          class="org.springframework.security.oauth2.provider.approval.ApprovalStoreUserApprovalHandler">
+        <property name="approvalStore" ref="approvalStore"/>
+        <property name="clientDetailsService" ref="clientDetailsService"/>
+        <property name="requestFactory">
+            <bean class="org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory">
+                <constructor-arg index="0" ref="clientDetailsService"/>
+            </bean>
+        </property>
     </bean>
 
     <!-- 1.4 authorization code creator 用户授权处理-->
@@ -81,15 +90,31 @@
     </bean>
 
     <!-- 认证管理器，使用自定义的UserDetailsService，并对密码采用md5加密 (默认ClientDetailsUserDetailsService) -->
-    <sec:authentication-manager id="clientAuthenticationManager">
-        <sec:authentication-provider user-service-ref="customUserDetailsService" >
-            <sec:password-encoder hash="md5" />
+    <sec:authentication-manager id="authenticationManager">
+        <sec:authentication-provider user-service-ref="userService">
+            <sec:password-encoder hash="md5"/>
+            <!--<sec:jdbc-user-service data-source-ref="dataSource"
+
+                                   users-by-username-query="
+                SELECT username, password, enabled
+                FROM user WHERE username = ?"
+
+                                   authorities-by-username-query="
+                SELECT u.username, r.role_name
+                FROM user u, user_role r, assigned_role a
+                WHERE u.id = a.username
+                AND r.id = a.role_id
+                AND u.username = ?"
+            />-->
         </sec:authentication-provider>
     </sec:authentication-manager>
 
     <!--认证失败，授权失败-->
     <bean id="oauth2AuthenticationEntryPoint"
-          class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint"/>
+          class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
+        <property name="realmName" value="conference/client"/>
+        <property name="typeName" value="Basic"/>
+    </bean>
 
     <bean id="oauth2AccessDeniedHandler"
           class="org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler"/>
@@ -142,4 +167,10 @@
         <sec:access-denied-handler ref="oauth2AccessDeniedHandler"/>
         <sec:csrf disabled="true"/>
     </sec:http>
+
+    <sec:global-method-security pre-post-annotations="enabled" proxy-target-class="true">
+        <sec:expression-handler ref="oauthExpressionHandler"/>
+    </sec:global-method-security>
+
+    <oauth2:expression-handler id="oauthExpressionHandler"/>
 </beans>
