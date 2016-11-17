@@ -1,7 +1,19 @@
 apply from: 'dependencyDefinitions.gradle'
 
-subprojects {
+buildscript {
     repositories {
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.1'
+        classpath 'org.akhikhl.gretty:gretty:+'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
         mavenCentral()
     }
 
@@ -15,4 +27,8 @@ subprojects {
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.14.1'
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }

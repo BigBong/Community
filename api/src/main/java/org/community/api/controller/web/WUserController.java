@@ -1,6 +1,6 @@
 package org.community.api.controller.web;
 
-import org.community.api.service.UserService;
+import org.community.core.service.UserService;
 import org.community.core.model.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

@@ -13,6 +13,7 @@
 
     <!-- Configures the @Controller programming model -->
     <mvc:annotation-driven/>
+    <mvc:default-servlet-handler/>
 
     <!-- Scans the classpath of this application for @Components to deploy as beans -->
     <!-- 多个包名用逗号隔开, 但不能有空格 -->

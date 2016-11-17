@@ -30,7 +30,7 @@ public class ParameterPair implements Parameter {
         /**
          * 构造方法
          *
-         * @param    operate    运算符号
+         * @param operate 运算符号
          */
         Operate(String operate) {
             m_sOperate = operate;
@@ -68,8 +68,8 @@ public class ParameterPair implements Parameter {
     /**
      * 构造方法
      *
-     * @param    field    字段名
-     * @param    value    字段值
+     * @param field 字段名
+     * @param value 字段值
      */
     public ParameterPair(String field, boolean value) {
         this(field, Operate.EQUAL, Boolean.valueOf(value), null);
@@ -78,8 +78,8 @@ public class ParameterPair implements Parameter {
     /**
      * 构造方法
      *
-     * @param    field    字段名
-     * @param    value    字段值
+     * @param field 字段名
+     * @param value 字段值
      */
     public ParameterPair(String field, int value) {
         this(field, Operate.EQUAL, Integer.valueOf(value), null);
@@ -88,8 +88,8 @@ public class ParameterPair implements Parameter {
     /**
      * 构造方法
      *
-     * @param    field    字段名
-     * @param    value    字段值
+     * @param field 字段名
+     * @param value 字段值
      */
     public ParameterPair(String field, Object value) {
         this(field, Operate.EQUAL, value, null);
@@ -98,8 +98,8 @@ public class ParameterPair implements Parameter {
     /**
      * 构造方法
      *
-     * @param    field    字段名
-     * @param    operate    运算符
+     * @param field   字段名
+     * @param operate 运算符
      */
     public ParameterPair(String field, Operate operate) {
         this(field, operate, null, null);
@@ -108,9 +108,9 @@ public class ParameterPair implements Parameter {
     /**
      * 构造方法
      *
-     * @param    field    字段名
-     * @param    operate    运算符
-     * @param    value    字段值
+     * @param field   字段名
+     * @param operate 运算符
+     * @param value   字段值
      */
     public ParameterPair(String field, Operate operate, Object value) {
         this(field, operate, value, null);
@@ -119,10 +119,10 @@ public class ParameterPair implements Parameter {
     /**
      * 构造方法
      *
-     * @param    field    字段名
-     * @param    operate    运算符
-     * @param    begin    范围的起始值
-     * @param    close    范围的结束值
+     * @param field   字段名
+     * @param operate 运算符
+     * @param begin   范围的起始值
+     * @param close   范围的结束值
      */
     public ParameterPair(String field, Operate operate, Object begin, Object close) {
         m_sField = field;
@@ -147,7 +147,7 @@ public class ParameterPair implements Parameter {
     /**
      * 设置运算符
      *
-     * @param    operate    运算符
+     * @param operate 运算符
      */
     public void setOperate(Operate operate) {
         m_oOperate = operate;
@@ -165,7 +165,7 @@ public class ParameterPair implements Parameter {
     /**
      * 设置字段名称
      *
-     * @param    field    字段名称
+     * @param field 字段名称
      */
     public void setField(String field) {
         m_sField = field;
@@ -183,7 +183,7 @@ public class ParameterPair implements Parameter {
     /**
      * 设置字段值
      *
-     * @param    value    字段值
+     * @param value 字段值
      */
     public void setValue(Object value) {
         m_oBegin = value;
@@ -201,7 +201,7 @@ public class ParameterPair implements Parameter {
     /**
      * 设置范围的起始值
      *
-     * @param    value    范围的起始值
+     * @param value 范围的起始值
      */
     public void setBeginValue(Object value) {
         m_oBegin = value;
@@ -219,7 +219,7 @@ public class ParameterPair implements Parameter {
     /**
      * 设置范围的结束值
      *
-     * @param    value    范围的结束值
+     * @param value 范围的结束值
      */
     public void setCloseValue(Object value) {
         m_oClose = value;

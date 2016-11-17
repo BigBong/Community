@@ -1,7 +1,7 @@
 package org.community.api.controller.mobile;
 
 import org.apache.log4j.Logger;
-import org.community.api.service.UserService;
+import org.community.core.service.UserService;
 import org.community.core.common.ReturnMsg;
 import org.community.core.model.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;

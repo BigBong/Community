@@ -1,118 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
-    <property resource="config/logback.properties" />
-    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
-        <Target>System.out</Target>
-        <encoder>
-            <pattern>%d [%t] %p %logger - %m%n</pattern>
+<!-- debug表示是否打印出logback的内部日志 scan表示是否在日志文件发生变化之后重新加载配置文件 scanPeriod表示扫描配置文件变化的时间间隔-->
+<configuration debug="false" scan="true" scanPeriod="5000">
+    <!-- 表示本工程的名字 -->
+    <contextName>logback_context</contextName>
+
+    <!-- 定义一些常量，可以在后面的配置中进行引用 -->
+    <property name="log.dir" value="log" />
+
+    <!-- appender是日志组件用来指定日志输出的目的地可以是（控制台，文件，数据库） 这个配置是控制台输出 -->
+    <!--注意： 如下这个配置是向控制台打印日志，但是tomcat会将标准输出重定向到一个日志文件中，这样会导致磁盘占用巨大，建议一般不要配置控制台打印，而是配置文件按天切割 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %class:%line - %msg%n</pattern>
         </encoder>
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>DEBUG</level>
-        </filter>
     </appender>
-    <appender name="LogFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${log.path}/${log.name}</File>
-        <Append>true</Append>
+
+    <!-- 配置文件按天切割 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
-            <pattern>%d [%t] %p %logger{0} - %m%n</pattern>
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %class:%line - %msg%n</pattern>
+            <charset>UTF-8</charset>
         </encoder>
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>INFO</level>
-        </filter>
+        <!-- 按天进行日志切割 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log.path}/${log.name}.%d{yyyy-MM-dd }</fileNamePattern>
+            <FileNamePattern>${log.dir}/%d{yyyy-MM-dd}.error.log</FileNamePattern>
+            <MaxHistory>10</MaxHistory>
         </rollingPolicy>
     </appender>
-    <appender name="ErrorFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${log.path}/${log.name.error}</File>
+
+    <!-- 错误日志按天输出到文件中，总共保留30天日志 -->
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
-            <pattern>%d [%t] %p %logger{0} - %m%n</pattern>
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %class:%line - %msg%n</pattern>
+            <charset>UTF-8</charset>
         </encoder>
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+        <!-- 按天进行日志切割 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${log.dir}/%d{yyyy-MM-dd}.error.log</FileNamePattern>
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <!-- 只打印错误日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
         </filter>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log.path}/${log.name.error}.%d{yyyy-MM-dd }</fileNamePattern>
-        </rollingPolicy>
+        <!--日志文件最大的大小 如果超过了文件大小的限制，则每天的文件会划分为更小的文件-->
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>1000MB</MaxFileSize>
+        </triggeringPolicy>
     </appender>
 
-    <!-- ****************************************************************************** -->
-    <appender name="configAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${log.config.path}/${log.config.name}</File>
+    <!-- 按照每天生成日志文件 -->
+    <appender name="SQL_FILE"  class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <FileNamePattern>${log.dir}/dbaccess.log.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <!--日志文件保留天数-->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
         <encoder>
-            <pattern>%d %p %logger{0} - %m%n</pattern>
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}  [%thread] %-5level %class:%line - %msg%n</pattern>
+            <charset>UTF-8</charset>
         </encoder>
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+        <!-- 打印Info级别的SQL日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
         </filter>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log.config.path}/${log.config.name}.%d{yyyy-MM-dd_HH}</fileNamePattern>
-        </rollingPolicy>
     </appender>
 
-    <appender name="eventAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${log.event.path}/${log.event.name}</File>
-        <encoder>
-            <pattern>%d %p %logger{0} - %m%n</pattern>
-        </encoder>
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>INFO</level>
-        </filter>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log.event.path}/${log.event.name}.%d{yyyy-MM-dd_HH}</fileNamePattern>
-        </rollingPolicy>
-    </appender>
-
-    <appender name="configCollectAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${log.config.path}/${log.collect.name}</File>
-        <encoder>
-            <pattern>%d %p %logger{0} - %m%n</pattern>
-        </encoder>
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>INFO</level>
-        </filter>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log.config.path}/${log.collect.name}.%d{yyyy-MM-dd_HH}</fileNamePattern>
-        </rollingPolicy>
-    </appender>
-
-    <appender name="accountAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${log.account.path}/${log.account.name}</File>
-        <encoder>
-            <pattern>%d %p %logger{0} - %m%n</pattern>
-        </encoder>
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>INFO</level>
-        </filter>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log.account.path}/${log.account.name}.%d{yyyy-MM-dd}</fileNamePattern>
-        </rollingPolicy>
-    </appender>
-
-    <logger name="eventLogger" level="INFO" additivity="false">
-        <appender-ref ref="eventAppender"/>
-    </logger>
-    <logger name="configLogger" level="INFO" additivity="false">
-        <appender-ref ref="configAppender"/>
-    </logger>
-    <logger name="collectLogger" level="INFO" additivity="false">
-        <appender-ref ref="configCollectAppender"/>
-    </logger>
-    <logger name="accountLogger" level="INFO" additivity="false">
-        <appender-ref ref="accountAppender"/>
-    </logger>
-
+    <!-- Logger 用来设置一个包或者某个类的日志打印级别-->
+    <!--如下5个包只打印ERROR级别的日志-->
     <logger name="org.springframework" level="INFO"/>
     <logger name="org.springframework.security" level="DEBUG"/>
     <logger name="org.apache" level="INFO"/>
     <logger name="org.mybatis.spring" level="DEBUG"/>
     <logger name="net.rubyeye.xmemcached" level="INFO"/>
     <logger name="com.google.code.yanf4j" level="INFO"/>
-    <logger name="org.springframework.data.mongodb" level="INFO"/>
 
-    <root level="DEBUG">
-        <appender-ref ref="Console"/>
-        <appender-ref ref="LogFile"/>
-        <appender-ref ref="ErrorFile"/>
+    <!-- com.community这个包下面的日志都打印到文件中具体规则，见appender的配置 -->
+    <logger name="com.community" level="INFO"/>
+
+    <!--catalina.out-->
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+        <appender-ref ref="ERROR_FILE"/>
     </root>
+
 </configuration>

@@ -1,4 +1,4 @@
-package org.community.api.service;
+package org.community.core.service;
 
 
 import org.community.core.model.pojo.User;

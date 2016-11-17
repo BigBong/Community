@@ -40,9 +40,12 @@
         </javaClientGenerator>
 
         <table tableName="user" domainObjectName="User"/>
-        <table tableName="user_role" domainObjectName="UserRole"/>
-        <table tableName="assigned_role" domainObjectName="AssignedRole"/>
+        <table tableName="user_privilege" domainObjectName="UserPrivilege"/>
         <table tableName="file" domainObjectName="LocalFile"/>
+        <table tableName="oauth_client_details" domainObjectName="OauthClientDetails"/>
+        <table tableName="oauth_access_token" domainObjectName="OauthAccessToken"/>
+        <table tableName="oauth_refresh_token" domainObjectName="OauthRefreshToken"/>
+        <table tableName="oauth_code" domainObjectName="OauthCode"/>
 
     </context>
 </generatorConfiguration>

@@ -1,8 +1,9 @@
 apply plugin: 'java'
 apply plugin: 'war'
-apply plugin: 'jetty'
+apply plugin: 'org.akhikhl.gretty'
 
 def env = System.getProperty("env", "dev");
+//noinspection GroovyAssignabilityCheck
 sourceSets {
     main {
         output.resourcesDir = "${buildDir}/classes/main"
@@ -28,8 +29,8 @@ dependencies {
     compile libraries.c3p0
 }
 
-jettyRun {
-    reload = "automatic"
-    httpPort = 8080
-    scanIntervalSeconds = 3
+gretty {
+    port = 8081
+    servletContainer = 'jetty9'
+    contextPath = '/'
 }

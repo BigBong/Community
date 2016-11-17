@@ -28,7 +28,7 @@ public class ParameterList implements Parameter {
         /**
          * 构造方法
          *
-         * @param	operate	运算符号
+         * @param    operate    运算符号
          */
         Logic(String operate) {
             m_sOperate = operate;
@@ -76,7 +76,7 @@ public class ParameterList implements Parameter {
     /**
      * 返回已经直接加入的参数的数量
      *
-     * @return	直接加入的参数的数量
+     * @return 直接加入的参数的数量
      */
     public int size() {
         return m_oParaLogics.size();

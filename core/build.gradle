@@ -45,11 +45,11 @@ dependencies {
             libraries.mybatis_spring,
     )
 
-    // logback
+    // slf4j logback
     compile(
-            libraries.slf4j_api,
-            libraries.logback_classic,
             libraries.log4j_over_slf4j,
+            libraries.logback_ext_spring,
+            libraries.logback_classic,
     )
 
     //  jackson

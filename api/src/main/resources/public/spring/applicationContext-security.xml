@@ -1,29 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:context="http://www.springframework.org/schema/context"
        xmlns:sec="http://www.springframework.org/schema/security"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:oauth2="http://www.springframework.org/schema/security/oauth2"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                         http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
-                        http://www.springframework.org/schema/context
-                        http://www.springframework.org/schema/context/spring-context.xsd
                         http://www.springframework.org/schema/security
                         http://www.springframework.org/schema/security/spring-security-4.1.xsd
                         http://www.springframework.org/schema/security/oauth2
                         http://www.springframework.org/schema/security/spring-security-oauth2-2.0.xsd">
-
-    <!--<context:component-scan base-package="org.community.api.config"/>-->
-
     <!-- 获取 token
-			http://localhost:8080/api/oauth/token?grant_type=password&client_id=restapp&client_secret=restapp&username=admin&password=123456
-		 -->
+        http://localhost:8080/api/oauth/token?grant_type=password&client_id=restapp&client_secret=restapp&username=admin&password=123456
+    -->
     <!-- Definition of the Authentication Service -->
-    <sec:http pattern="/oauth/token" create-session="stateless"
-              authentication-manager-ref="authenticationManager">
+    <sec:http pattern="/oauth/token" create-session="stateless" authentication-manager-ref="oauth2AuthenticationManager"
+              entry-point-ref="oauth2AuthenticationEntryPoint" use-expressions="false">
         <sec:intercept-url pattern="/oauth/token" access="IS_AUTHENTICATED_FULLY"/>
         <sec:anonymous enabled="false"/>
         <sec:http-basic entry-point-ref="oauth2AuthenticationEntryPoint"/>
+
         <sec:custom-filter ref="clientCredentialsTokenEndpointFilter" before="BASIC_AUTH_FILTER"/>
         <sec:access-denied-handler ref="oauth2AccessDeniedHandler"/>
         <sec:csrf disabled="true"/>
@@ -31,17 +26,17 @@
 
     <bean id="clientCredentialsTokenEndpointFilter"
           class="org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter">
-        <property name="authenticationManager" ref="authenticationManager"/>
+        <property name="authenticationManager" ref="oauth2AuthenticationManager"/>
         <property name="allowOnlyPost" value="true"/>
     </bean>
 
     <!-- 1. OAuth2 related config -->
     <oauth2:authorization-server client-details-service-ref="clientDetailsService"
                                  token-services-ref="tokenServices"
-                                 user-approval-handler-ref="userApprovalHandler"
+                                 user-approval-handler-ref="oauthUserApprovalHandler"
                                  user-approval-page="oauth_approval"
                                  error-page="oauth_error">
-        <oauth2:authorization-code authorization-code-services-ref="authorizationCodeServices"/>
+        <oauth2:authorization-code authorization-code-services-ref="jdbcAuthorizationCodeServices"/>
         <oauth2:implicit/>
         <oauth2:refresh-token/>
         <oauth2:client-credentials/>
@@ -50,21 +45,26 @@
 
     <!-- 1.1 client detail service 第三方client端信息查询配置-->
     <bean id="clientDetailsService"
-          class="org.springframework.security.oauth2.provider.client.JdbcClientDetailsService">
+          class="org.community.core.oauth.CustomJdbcClientDetailsService">
         <constructor-arg index="0" ref="dataSource"/>
     </bean>
 
     <!-- 1.2 Config token services token查询操作相关-->
+    <!--Config token services  将token信息存放数据库-->
+    <bean id="tokenStore"
+          class="org.community.core.oauth.CustomJdbcTokenStore">
+        <constructor-arg index="0" ref="dataSource"/>
+    </bean>
     <bean id="tokenServices" class="org.springframework.security.oauth2.provider.token.DefaultTokenServices">
         <property name="supportRefreshToken" value="true"/>
         <property name="accessTokenValiditySeconds" value="300000"/>
         <property name="tokenStore" ref="tokenStore"/>
         <property name="clientDetailsService" ref="clientDetailsService"/>
     </bean>
-    <!--Config token services  将token信息存放数据库-->
-    <bean id="tokenStore"
-          class="org.springframework.security.oauth2.provider.token.store.JdbcTokenStore">
-        <constructor-arg index="0" ref="dataSource"/>
+
+    <bean class="org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory"
+          id="oAuth2RequestFactory">
+        <constructor-arg name="clientDetailsService" ref="clientDetailsService"/>
     </bean>
 
     <bean id="approvalStore" class="org.springframework.security.oauth2.provider.approval.TokenApprovalStore">
@@ -72,40 +72,32 @@
     </bean>
 
     <!-- 1.3 oauthUserApprovalHandler 授权code获取-->
-    <bean id="userApprovalHandler"
-          class="org.springframework.security.oauth2.provider.approval.ApprovalStoreUserApprovalHandler">
-        <property name="approvalStore" ref="approvalStore"/>
+    <bean id="oauthUserApprovalHandler" class="org.community.core.oauth.OauthUserApprovalHandler">
+        <property name="tokenStore" ref="tokenStore"/>
         <property name="clientDetailsService" ref="clientDetailsService"/>
-        <property name="requestFactory">
-            <bean class="org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory">
-                <constructor-arg index="0" ref="clientDetailsService"/>
-            </bean>
-        </property>
+        <property name="requestFactory" ref="oAuth2RequestFactory"/>
+        <property name="oauthDao" ref="oauthDao"/>
     </bean>
 
     <!-- 1.4 authorization code creator 用户授权处理-->
-    <bean id="authorizationCodeServices"
-          class="org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices">
+    <bean id="jdbcAuthorizationCodeServices"
+          class="org.community.core.oauth.SOSAuthorizationCodeServices">
         <constructor-arg index="0" ref="dataSource"/>
     </bean>
 
-    <!-- 认证管理器，使用自定义的UserDetailsService，并对密码采用md5加密 (默认ClientDetailsUserDetailsService) -->
-    <sec:authentication-manager id="authenticationManager">
+    <bean id="oauth2ClientDetailsUserService"
+          class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
+        <constructor-arg ref="clientDetailsService"/>
+    </bean>
+
+    <sec:authentication-manager id="oauth2AuthenticationManager">
+        <sec:authentication-provider user-service-ref="oauth2ClientDetailsUserService"/>
+    </sec:authentication-manager>
+
+    <!-- 认证管理器，使用自定义的UserServiceImpl，并对密码采用md5加密 (默认ClientDetailsUserDetailsService) -->
+    <sec:authentication-manager alias="authenticationManager">
         <sec:authentication-provider user-service-ref="userService">
             <sec:password-encoder hash="md5"/>
-            <!--<sec:jdbc-user-service data-source-ref="dataSource"
-
-                                   users-by-username-query="
-                SELECT username, password, enabled
-                FROM user WHERE username = ?"
-
-                                   authorities-by-username-query="
-                SELECT u.username, r.role_name
-                FROM user u, user_role r, assigned_role a
-                WHERE u.id = a.username
-                AND r.id = a.role_id
-                AND u.username = ?"
-            />-->
         </sec:authentication-provider>
     </sec:authentication-manager>
 
@@ -119,7 +111,10 @@
     <bean id="oauth2AccessDeniedHandler"
           class="org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler"/>
 
-    <!--scope投票机制-->
+    <!--
+    扩展Spring Security 默认的 AccessDecisionManager
+    添加对OAuth中 scope 的检查与校验
+    -->
     <bean id="oauth2AccessDecisionManager"
           class="org.springframework.security.access.vote.UnanimousBased">
         <constructor-arg>
@@ -138,15 +133,12 @@
 
     <!--web http configuration-->
     <sec:http pattern="/web/**"
-              request-matcher="mvc"
               create-session="never"
               entry-point-ref="oauth2AuthenticationEntryPoint"
               access-decision-manager-ref="oauth2AccessDecisionManager"
               use-expressions="false">
         <sec:anonymous enabled="false"/>
-
         <sec:intercept-url pattern="/web/**" access="ROLE_WEB,SCOPE_READ"/>
-
         <sec:custom-filter ref="webResourceServer" before="PRE_AUTH_FILTER"/>
         <sec:access-denied-handler ref="oauth2AccessDeniedHandler"/>
         <sec:csrf disabled="true"/>
@@ -154,15 +146,12 @@
 
     <!--mobile http configuration-->
     <sec:http pattern="/m/**"
-              request-matcher="mvc"
               create-session="never"
               entry-point-ref="oauth2AuthenticationEntryPoint"
               access-decision-manager-ref="oauth2AccessDecisionManager"
               use-expressions="false">
         <sec:anonymous enabled="false"/>
-
         <sec:intercept-url pattern="/m/**" access="ROLE_MOBILE,SCOPE_READ"/>
-
         <sec:custom-filter ref="mobileResourceServer" before="PRE_AUTH_FILTER"/>
         <sec:access-denied-handler ref="oauth2AccessDeniedHandler"/>
         <sec:csrf disabled="true"/>

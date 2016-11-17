@@ -21,19 +21,11 @@ CREATE TABLE user (
     PRIMARY KEY (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 
-Drop table  if exists user_role;
-CREATE TABLE user_role (
-  role_id INT(16),
-  role_priority INT(8),
-  role_name VARCHAR(255),
-  description VARCHAR(255) NULL
-);
-
-Drop table  if exists assigned_role;
-CREATE TABLE assigned_role (
-  user_id INT(16),
-  role_id INT(11),
-  description VARCHAR(255) NULL
-);
+Drop table  if exists user_privilege;
+CREATE TABLE user_privilege (
+  user_id int(11),
+  privilege varchar(255),
+  KEY user_id_index (user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 

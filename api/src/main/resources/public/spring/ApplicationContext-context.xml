@@ -14,7 +14,6 @@
        http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <context:annotation-config/>
-    <context:component-scan base-package="org.community.api.common"/>
     <aop:aspectj-autoproxy/>
 
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -62,7 +61,7 @@
     </tx:advice>
 
     <aop:config proxy-target-class="true">
-        <aop:pointcut id="interceptorPointCuts" expression="execution(* org.community.api.service.*.*(..))"/>
+        <aop:pointcut id="interceptorPointCuts" expression="execution(* org.community.core.service.*.*(..))"/>
         <aop:advisor advice-ref="txAdvice" pointcut-ref="interceptorPointCuts"/>
     </aop:config>
 
@@ -83,5 +82,5 @@
     <!--dao-->
     <context:component-scan base-package="org.community.core.dao"/>
     <!--service-->
-    <context:component-scan base-package="org.community.api.service"/>
+    <context:component-scan base-package="org.community.core.service"/>
 </beans>

@@ -1,13 +1,11 @@
-package org.community.api.service.impl;
+package org.community.core.service.impl;
 
-import org.community.api.common.OauthUserDetails;
-import org.community.core.dao.AssignedRoleDao;
 import org.community.core.dao.UserDao;
-import org.community.api.service.UserService;
-import org.community.core.dao.UserRoleDao;
-import org.community.core.model.pojo.AssignedRole;
+import org.community.core.dao.UserPrivilegeDao;
+import org.community.core.model.pojo.UserPrivilege;
+import org.community.core.oauth.dto.UserDetailsDto;
+import org.community.core.service.UserService;
 import org.community.core.model.pojo.User;
-import org.community.core.model.pojo.UserRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +23,8 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Autowired
-    private AssignedRoleDao assignedRoleDao;
+    private UserPrivilegeDao userPrivilegeDao;
 
-    @Autowired
-    private UserRoleDao userRoleDao;
 
     @Override
     public User getById(int id) {
@@ -58,12 +54,8 @@ public class UserServiceImpl implements UserService {
             throw new UsernameNotFoundException("Not found any user for username[" + username + "]");
         }
 
-        AssignedRole assignedRole = assignedRoleDao.getRoleByUserId(user.getId());
-        UserRole userRole = null;
-        if (assignedRole != null) {
-            userRole = userRoleDao.getUserRoleByRoleId(assignedRole.getRoleId());
-        }
+        List<UserPrivilege> userPrivileges = userPrivilegeDao.getUserPrivileges(user.getId());
 
-        return new OauthUserDetails(user, userRole == null ? "" : userRole.getRoleName());
+        return new UserDetailsDto(user, userPrivileges);
     }
 }
