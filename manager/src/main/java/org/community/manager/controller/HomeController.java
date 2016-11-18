@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * Created by frodo on 2016/11/9.
  */
 @Controller
-public class HomeController extends BaseController {
+public class HomeController {
 
     @RequestMapping(value = "/welcome")
     public String welcome(Model model) {

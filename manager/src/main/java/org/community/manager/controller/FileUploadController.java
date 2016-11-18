@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.community.core.common.ReturnMsg;
 import org.community.core.model.pojo.LocalFile;
-import org.community.core.model.pojo.User;
 import org.community.manager.service.FileUploadService;
 import org.community.manager.utils.DateUtil;
 import org.community.manager.utils.FileUtils;
@@ -19,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @Controller
 @RequestMapping("file")
-public class FileUploadController extends BaseController {
+public class FileUploadController {
     private static final Logger logger = LoggerFactory.getLogger(FileUploadController.class);
 
     @Autowired
@@ -104,7 +102,7 @@ public class FileUploadController extends BaseController {
             LocalFile fu = saveFile(name, file);
             long endTime = System.currentTimeMillis();
             logger.info("文件上传success! -costTime:{} ms,fileSize:{} byte", (endTime - startTime), file.getSize());
-            return ReturnMsg.success(fu);
+            return ReturnMsg.success("文件上传success", fu);
         } catch (IOException e) {
             logger.error("文件上传失败-file:{},e:{}", file.getOriginalFilename(), e);
             return ReturnMsg.error("文件上传失败");

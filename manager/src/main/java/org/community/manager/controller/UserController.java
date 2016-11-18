@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("user")
-public class UserController extends BaseController {
+public class UserController {
 
     @Autowired
     private UserDao userDao;

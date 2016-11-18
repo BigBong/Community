@@ -23,11 +23,7 @@ public class MUserController {
     public ReturnMsg getUser(@PathVariable("username") String username) {
         logger.info("getByIdFromParam >> username:" + username);
         User user = userService.getUserByName(username);
-        if (user != null) {
-            return ReturnMsg.success("success", user);
-        } else {
-            return ReturnMsg.fail();
-        }
+        return ReturnMsg.success("success", user);
     }
 
     @RequestMapping(value = "list")
@@ -35,11 +31,7 @@ public class MUserController {
     public ReturnMsg getUsers() {
         logger.info("getPersons");
         List<User> users = userService.getList();
-        if (users != null) {
-            return ReturnMsg.success("success",users);
-        } else {
-            return ReturnMsg.fail();
-        }
+        return ReturnMsg.success("success",users);
     }
 
     @RequestMapping(value = "insert", method = RequestMethod.POST)
@@ -49,7 +41,7 @@ public class MUserController {
         if (flag == 0) {
             return ReturnMsg.success("insert user success.");
         } else {
-            return ReturnMsg.fail("insert user fail.");
+            return ReturnMsg.fail(ReturnMsg.CODE_INTERNAL_ERROR, "insert user fail.");
         }
     }
 }

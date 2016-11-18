@@ -38,7 +38,7 @@ import java.util.Map;
  * Created by frodo on 2016/7/15.
  */
 @Controller
-public class OAuthRestController implements InitializingBean, ApplicationContextAware {
+public class OAuthRestController {
 
     private static final Logger LOG = LoggerFactory.getLogger(OAuthRestController.class);
 
@@ -122,23 +122,7 @@ public class OAuthRestController implements InitializingBean, ApplicationContext
     }
 
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<OAuth2Exception> handleException(Exception e) throws Exception {
-        LOG.info("Handling error: " + e.getClass().getSimpleName() + ", " + e.getMessage());
-        return getExceptionTranslator().translate(e);
-    }
 
-    @ExceptionHandler(ClientRegistrationException.class)
-    public ResponseEntity<OAuth2Exception> handleClientRegistrationException(Exception e) throws Exception {
-        LOG.info("Handling error: " + e.getClass().getSimpleName() + ", " + e.getMessage());
-        return getExceptionTranslator().translate(new BadClientCredentialsException());
-    }
-
-    @ExceptionHandler(OAuth2Exception.class)
-    public ResponseEntity<OAuth2Exception> handleException(OAuth2Exception e) throws Exception {
-        LOG.info("Handling error: " + e.getClass().getSimpleName() + ", " + e.getMessage());
-        return getExceptionTranslator().translate(e);
-    }
 
 
     private boolean isRefreshTokenRequest(Map<String, String> parameters) {
@@ -149,7 +133,6 @@ public class OAuthRestController implements InitializingBean, ApplicationContext
         return "authorization_code".equals(parameters.get("grant_type")) && parameters.get("code") != null;
     }
 
-
     private String getClientId(Map<String, String> parameters) {
         return parameters.get("client_id");
     }
@@ -158,23 +141,8 @@ public class OAuthRestController implements InitializingBean, ApplicationContext
         return this.authenticationManager;
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Assert.state(clientDetailsService != null, "ClientDetailsService must be provided");
-        Assert.state(authenticationManager != null, "AuthenticationManager must be provided");
-
-        oAuth2RequestFactory = new DefaultOAuth2RequestFactory(clientDetailsService);
-    }
-
     private WebResponseExceptionTranslator getExceptionTranslator() {
         return providerExceptionHandler;
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        if (this.authenticationManager == null) {
-            this.authenticationManager = (AuthenticationManager) applicationContext.getBean("authenticationManager");
-        }
     }
 }
 

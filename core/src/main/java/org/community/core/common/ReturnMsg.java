@@ -2,9 +2,10 @@ package org.community.core.common;
 
 public class ReturnMsg {
 
-    public static int CODE_SUCCESS = 200;
-    public static int CODE_FAIL = 400;
-    public static int CODE_UNKNOWN_ERROR = 300;
+    public static final int CODE_SUCCESS = 200;
+    public static final int CODE_OAUTH2_ERROR = 300;
+    public static final int CODE_INTERNAL_ERROR = 400;
+    public static final int CODE_UNKNOWN_ERROR = 500;
     private int code;
     private String message;
     private Object data;
@@ -20,12 +21,16 @@ public class ReturnMsg {
         return new ReturnMsg(CODE_UNKNOWN_ERROR, errorMessage, "");
     }
 
-    public static  ReturnMsg fail() {
-        return new ReturnMsg(CODE_FAIL, "fail", "");
-    }
-
-    public static  ReturnMsg fail(String message) {
-        return new ReturnMsg(CODE_FAIL, message, "");
+    public static  ReturnMsg fail(int errorCode, String message) {
+        switch (errorCode) {
+            case CODE_OAUTH2_ERROR:
+                return new ReturnMsg(errorCode, "无访问权限", message);
+            case CODE_INTERNAL_ERROR:
+                return new ReturnMsg(errorCode, "内部处理出错", message);
+            case CODE_UNKNOWN_ERROR:
+                return new ReturnMsg(errorCode, "内部处理出错", message);
+        }
+        return new ReturnMsg(errorCode, "fail", message);
     }
 
     public static  ReturnMsg  success(String successMessage) {
