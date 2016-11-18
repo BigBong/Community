@@ -20,11 +20,11 @@ public class MUserController {
 
     @RequestMapping(value = "{username}")
     @ResponseBody
-    public ReturnMsg<User> getUser(@PathVariable("username") String username) {
+    public ReturnMsg getUser(@PathVariable("username") String username) {
         logger.info("getByIdFromParam >> username:" + username);
         User user = userService.getUserByName(username);
         if (user != null) {
-            return ReturnMsg.success(user);
+            return ReturnMsg.success("success", user);
         } else {
             return ReturnMsg.fail();
         }
@@ -32,11 +32,11 @@ public class MUserController {
 
     @RequestMapping(value = "list")
     @ResponseBody
-    public ReturnMsg<List<User>> getUsers() {
+    public ReturnMsg getUsers() {
         logger.info("getPersons");
         List<User> users = userService.getList();
         if (users != null) {
-            return ReturnMsg.success(users);
+            return ReturnMsg.success("success",users);
         } else {
             return ReturnMsg.fail();
         }
@@ -49,7 +49,7 @@ public class MUserController {
         if (flag == 0) {
             return ReturnMsg.success("insert user success.");
         } else {
-            return ReturnMsg.error("insert user fail.");
+            return ReturnMsg.fail("insert user fail.");
         }
     }
 }

@@ -3,7 +3,6 @@ package org.community.manager.utils;
 import java.io.IOException;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.SerializationFeature;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.community.core.common.ReturnMsg;
@@ -21,7 +20,7 @@ public class ReturnMessageUtil {
      * @return json串
      */
     public static String createValidationErrorMsg(List<ObjectError> errors) {
-        ReturnMsg errorMsg = new ReturnMsg();
+        ReturnMsg errorMsg = new ReturnMsg(code, message, data);
         errorMsg.setCode(Constants.ERROR_CODE);
         for (ObjectError oe : errors) {
             errorMsg.setData(oe.getDefaultMessage());
@@ -36,7 +35,7 @@ public class ReturnMessageUtil {
      * @return json串
      */
     public static String createOKMsg(Object ro) {
-        ReturnMsg okMsg = new ReturnMsg();
+        ReturnMsg okMsg = new ReturnMsg(code, message, data);
         okMsg.setCode(Constants.CORRECT_CODE);
         okMsg.setData(ro);
         return toJson(okMsg);
@@ -49,7 +48,7 @@ public class ReturnMessageUtil {
      * @return
      */
     public static String createExceptionMsg(Exception e) {
-        ReturnMsg okMsg = new ReturnMsg();
+        ReturnMsg okMsg = new ReturnMsg(code, message, data);
         okMsg.setCode(Constants.ERROR_CODE);
         okMsg.setData(e.getMessage());
         return toJson(okMsg);
@@ -62,7 +61,7 @@ public class ReturnMessageUtil {
      * @return
      */
     public static String createErrorMsg(String msg) {
-        ReturnMsg errorMsg = new ReturnMsg();
+        ReturnMsg errorMsg = new ReturnMsg(code, message, data);
         errorMsg.setCode(Constants.ERROR_CODE);
         errorMsg.setData(msg);
         return toJson(errorMsg);
@@ -75,7 +74,7 @@ public class ReturnMessageUtil {
      * @return
      */
     public static String createNotFoundMsg(String msg) {
-        ReturnMsg errorMsg = new ReturnMsg();
+        ReturnMsg errorMsg = new ReturnMsg(code, message, data);
         errorMsg.setCode(Constants.NOT_FOUND_CODE);
         errorMsg.setData(msg);
         return toJson(errorMsg);
@@ -89,7 +88,7 @@ public class ReturnMessageUtil {
      * @return
      */
     public static String createOKMsg(Object ro, String callback) {
-        ReturnMsg okMsg = new ReturnMsg();
+        ReturnMsg okMsg = new ReturnMsg(code, message, data);
         okMsg.setCode(Constants.CORRECT_CODE);
         okMsg.setData(ro);
         if (callback != null) {
@@ -109,7 +108,7 @@ public class ReturnMessageUtil {
      * @return
      */
     public static String createErrorMsg(String msg, String callback) {
-        ReturnMsg errorMsg = new ReturnMsg();
+        ReturnMsg errorMsg = new ReturnMsg(code, message, data);
         errorMsg.setCode(Constants.ERROR_CODE);
         errorMsg.setData(msg);
         if (callback != null) {
@@ -129,7 +128,7 @@ public class ReturnMessageUtil {
      * @return
      */
     public static String createNotFoundMsg(String msg, String callback) {
-        ReturnMsg errorMsg = new ReturnMsg();
+        ReturnMsg errorMsg = new ReturnMsg(code, message, data);
         errorMsg.setCode(Constants.NOT_FOUND_CODE);
         errorMsg.setData(msg);
         if (callback != null) {

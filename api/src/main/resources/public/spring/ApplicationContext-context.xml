@@ -69,9 +69,7 @@
         <property name="dataSource" ref="dataSource"/>
         <!--<property name="configLocation" value="classpath:mybatis/mybatis-config.xml"/>-->
         <property name="mapperLocations">
-            <array>
-                <value>classpath:mybatis/sqlmap/generator/*.xml</value>
-            </array>
+            <value>classpath:mybatis/sqlmap/generator/*.xml</value>
         </property>
     </bean>
 

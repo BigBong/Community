@@ -2,6 +2,7 @@ package org.community.core.oauth.dto;
 
 import org.community.core.model.pojo.User;
 import org.community.core.model.pojo.UserPrivilege;
+import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,7 +14,7 @@ import java.util.List;
 /**
  * Created by frodo on 2016/11/16.
  */
-public class UserDetailsDto implements UserDetails {
+public class UserDetailsDto extends User implements UserDetails, CredentialsContainer {
 
     private static final long serialVersionUID = 3957586021470480642L;
 
@@ -91,5 +92,9 @@ public class UserDetailsDto implements UserDetails {
         sb.append("{user=").append(user);
         sb.append('}');
         return sb.toString();
+    }
+
+    @Override
+    public void eraseCredentials() {
     }
 }

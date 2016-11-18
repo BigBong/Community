@@ -13,8 +13,11 @@
         http://localhost:8080/api/oauth/token?grant_type=password&client_id=restapp&client_secret=restapp&username=admin&password=123456
     -->
     <!-- Definition of the Authentication Service -->
-    <sec:http pattern="/oauth/token" create-session="stateless" authentication-manager-ref="oauth2AuthenticationManager"
-              entry-point-ref="oauth2AuthenticationEntryPoint" use-expressions="false">
+    <sec:http pattern="/oauth/token"
+              create-session="stateless"
+              authentication-manager-ref="oauth2AuthenticationManager"
+              entry-point-ref="oauth2AuthenticationEntryPoint"
+              use-expressions="false">
         <sec:intercept-url pattern="/oauth/token" access="IS_AUTHENTICATED_FULLY"/>
         <sec:anonymous enabled="false"/>
         <sec:http-basic entry-point-ref="oauth2AuthenticationEntryPoint"/>

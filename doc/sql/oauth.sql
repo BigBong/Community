@@ -14,42 +14,41 @@ create table oauth_client_details (
   access_token_validity INTEGER,
   refresh_token_validity INTEGER,
   additional_information TEXT,
-  create_time timestamp default now(),
   archived tinyint(1) default '0',
   trusted tinyint(1) default '0',
-  autoapprove VARCHAR (255) default 'false'
+  autoapprove VARCHAR (255) default 'false',
+  create_at timestamp default now()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 Drop table  if exists oauth_access_token;
 create table oauth_access_token (
-  create_time timestamp default now(),
   token_id VARCHAR(255),
   token BLOB,
   authentication_id VARCHAR(255),
   user_name VARCHAR(255),
   client_id VARCHAR(255),
   authentication BLOB,
-  refresh_token VARCHAR(255)
+  refresh_token VARCHAR(255),
+  create_at timestamp default now()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 Drop table  if exists oauth_refresh_token;
 create table oauth_refresh_token (
-  create_time timestamp default now(),
   token_id VARCHAR(255),
   token BLOB,
-  authentication BLOB
+  authentication BLOB,
+  create_at timestamp default now()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 Drop table  if exists oauth_code;
 create table oauth_code (
-  create_time timestamp default now(),
   code VARCHAR(255),
-  authentication BLOB
+  authentication BLOB,
+  create_at timestamp default now()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 
 -- Add indexes

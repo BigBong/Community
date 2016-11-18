@@ -32,5 +32,5 @@ dependencies {
 gretty {
     port = 8081
     servletContainer = 'jetty9'
-    contextPath = '/'
+    contextPath = 'api'
 }
